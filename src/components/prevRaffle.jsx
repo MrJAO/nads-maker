@@ -116,7 +116,9 @@ function RaffleCard({ raffleId }) {
   const state = raffleInfo[9];
 
   // Only show completed raffles
-  if (state !== 5) return null; // 5 = Completed
+  // if (state !== 5) return null; // 5 = Completed
+
+  if (Date.now() / 1000 < endTime) return null;
 
   const isSuccessful = participantCount >= threshold;
   const thresholdPercent = threshold > 0 ? ((participantCount / threshold) * 100).toFixed(0) : 0;
