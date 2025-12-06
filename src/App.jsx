@@ -29,7 +29,7 @@ function App() {
 
   const handleEnter = (e) => {
     e.stopPropagation();
-    navigate('/nadsmaker');
+    navigate('/1mon');
   };
 
   return (

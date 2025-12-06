@@ -198,7 +198,7 @@ function Profile() {
           )}
         </div>
         <div className="nads-nav">
-          <button className="nads-btn" onClick={() => navigate('/nadsmaker')}>1 MON</button>
+          <button className="nads-btn" onClick={() => navigate('/1mon')}>1 MON</button>
           <button className="nads-btn" onClick={() => navigate('/nft-draw')}>NFT Draw</button>
           <button className="nads-btn" onClick={() => navigate('/profile')}>Profile</button>
           <button className="nads-btn primary" onClick={handleWalletClick}>

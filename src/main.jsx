@@ -19,7 +19,7 @@ createRoot(document.getElementById('root')).render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<App />} />
-          <Route path="/nadsmaker" element={<NadsMaker />} />
+          <Route path="/1mon" element={<NadsMaker />} />
           <Route path="/docs" element={<Docs />} />
           <Route path="/nft-draw" element={<NFTDraw />} />
           <Route path="/admin" element={<Admin />} />

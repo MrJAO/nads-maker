@@ -8,7 +8,7 @@ function Docs() {
   return (
     <div className="docs-container">
       <aside className="docs-sidebar">
-        <div className="docs-title" onClick={() => navigate('/nadsmaker')}>Documentation</div>
+        <div className="docs-title" onClick={() => navigate('/1mon')}>Documentation</div>
         <nav className="docs-nav">
           <button 
             className={`docs-nav-btn ${activeTab === 'guidelines' ? 'active' : ''}`}
@@ -17,8 +17,8 @@ function Docs() {
             Guidelines
           </button>
           <button 
-            className={`docs-nav-btn ${activeTab === '1mon' ? 'active' : ''}`}
-            onClick={() => setActiveTab('1mon')}
+            className={`docs-nav-btn ${activeTab === '/1mon' ? 'active' : ''}`}
+            onClick={() => setActiveTab('/1mon')}
           >
             1 MON and A Dream
           </button>
@@ -102,7 +102,7 @@ function Docs() {
           </div>
         )}
 
-        {activeTab === '1mon' && (
+        {activeTab === '/1mon' && (
           <div className="docs-section">
             <h1>1 MON and A Dream</h1>
             
@@ -113,6 +113,7 @@ function Docs() {
               <h3>⚠️ Important Wallet Recommendations</h3>
               <ul>
                 <li><strong>Use MetaMask for the best experience.</strong> This dApp uses Wagmi for wallet integration, which is optimized for MetaMask.</li>
+                <li><strong>Always read the Wallet Confirmation message.</strong> Don't rush, check the popup message before confirming any transaction.</li>
                 <li><strong>Use a dummy or sub wallet address for additional security.</strong> Never connect your main wallet with significant funds to any dApp.</li>
               </ul>
             </div>

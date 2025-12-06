@@ -198,7 +198,7 @@ function MonAnalytics() {
             )}
           </div>
           <div className="nads-nav">
-            <button className="nads-btn" onClick={() => navigate('/nadsmaker')}>1 MON</button>
+            <button className="nads-btn" onClick={() => navigate('//1mon')}>1 MON</button>
             <button className="nads-btn" onClick={() => navigate('/nft-draw')}>NFT Draw</button>
             <button className="nads-btn" onClick={() => navigate('/profile')}>Profile</button>
             <button className="nads-btn primary" onClick={handleWalletClick}>
@@ -207,7 +207,7 @@ function MonAnalytics() {
           </div>
         </header>
         <div className="sub-nav">
-          <button className="sub-nav-btn" onClick={() => navigate('/nadsmaker')}>Live</button>
+          <button className="sub-nav-btn" onClick={() => navigate('/1mon')}>Live</button>
           <button className="sub-nav-btn" onClick={() => navigate('/prev-raffle')}>Previous Activities</button>
           <button className="sub-nav-btn active">Analytics</button>
         </div>
@@ -232,7 +232,7 @@ function MonAnalytics() {
             )}
           </div>
           <div className="nads-nav">
-            <button className="nads-btn" onClick={() => navigate('/nadsmaker')}>1 MON</button>
+            <button className="nads-btn" onClick={() => navigate('/1mon')}>1 MON</button>
             <button className="nads-btn" onClick={() => navigate('/nft-draw')}>NFT Draw</button>
             <button className="nads-btn" onClick={() => navigate('/profile')}>Profile</button>
             <button className="nads-btn primary" onClick={handleWalletClick}>
@@ -241,7 +241,7 @@ function MonAnalytics() {
           </div>
         </header>
         <div className="sub-nav">
-          <button className="sub-nav-btn" onClick={() => navigate('/nadsmaker')}>Live</button>
+          <button className="sub-nav-btn" onClick={() => navigate('/1mon')}>Live</button>
           <button className="sub-nav-btn" onClick={() => navigate('/prev-raffle')}>Previous Activities</button>
           <button className="sub-nav-btn active">Analytics</button>
         </div>
@@ -271,7 +271,7 @@ function MonAnalytics() {
           )}
         </div>
         <div className="nads-nav">
-          <button className="nads-btn" onClick={() => navigate('/nadsmaker')}>1 MON</button>
+          <button className="nads-btn" onClick={() => navigate('/1mon')}>1 MON</button>
           <button className="nads-btn" onClick={() => navigate('/nft-draw')}>NFT Draw</button>
           <button className="nads-btn" onClick={() => navigate('/profile')}>Profile</button>
           <button className="nads-btn primary" onClick={handleWalletClick}>
@@ -281,7 +281,7 @@ function MonAnalytics() {
       </header>
 
       <div className="sub-nav">
-        <button className="sub-nav-btn" onClick={() => navigate('/nadsmaker')}>Live</button>
+        <button className="sub-nav-btn" onClick={() => navigate('/1mon')}>Live</button>
         <button className="sub-nav-btn" onClick={() => navigate('/prev-raffle')}>Previous Activities</button>
         <button className="sub-nav-btn active">Analytics</button>
       </div>

@@ -31,7 +31,7 @@ function Admin() {
   const isAdmin = isConnected && address?.toLowerCase() === ADMIN_ADDRESS.toLowerCase();
 
   // Form states
-  const [raffleType, setRaffleType] = useState('1mon');
+  const [raffleType, setRaffleType] = useState('/1mon');
   const [rewards, setRewards] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -240,7 +240,7 @@ function Admin() {
         )}
       </div>
       <div className="nads-nav">
-        <button className="nads-btn accent" onClick={() => navigate('/nadsmaker')}>1 MON</button>
+        <button className="nads-btn accent" onClick={() => navigate('//1mon')}>1 MON</button>
         <button className="nads-btn" onClick={() => navigate('/nft-draw')}>NFT Draw</button>
         <button className="nads-btn" onClick={() => navigate('/profile')}>Profile</button>
         <button className="nads-btn primary" onClick={handleWalletClick}>
@@ -291,8 +291,8 @@ function Admin() {
               <div className="radio-group">
                 <button 
                   type="button"
-                  className={`radio-btn ${raffleType === '1mon' ? 'active' : ''}`}
-                  onClick={() => setRaffleType('1mon')}
+                  className={`radio-btn ${raffleType === '/1mon' ? 'active' : ''}`}
+                  onClick={() => setRaffleType('/1mon')}
                   disabled={isLoading}
                 >
                   1 MON Raffle
@@ -308,7 +308,7 @@ function Admin() {
               </div>
             </div>
 
-            {raffleType === '1mon' ? (
+            {raffleType === '/1mon' ? (
               <>
                 <div className="form-group">
                   <label>Rewards (MON)</label>
