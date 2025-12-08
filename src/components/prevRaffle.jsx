@@ -5,7 +5,7 @@ import { ADMIN_ADDRESS, monadMainnet } from '../walletIntegration/config';
 import OneMONABI from '../abi/OneMON.json';
 
 const CONTRACT_CONFIG = {
-  address: '0x3A4Df4c34ff710f9F81347020eb5ff83dF4dF4BE',
+  address: '0x26A56f3245161CE7938200F1366A1cf9549c7e20',
   abi: OneMONABI,
   chainId: monadMainnet.id,
 };

@@ -9,7 +9,7 @@ import OneMONABI from '../abi/OneMON.json';
 // CONTRACT CONFIGURATION
 // ============================================
 const CONTRACT_CONFIG = {
-  address: '0x3A4Df4c34ff710f9F81347020eb5ff83dF4dF4BE',
+  address: '0x26A56f3245161CE7938200F1366A1cf9549c7e20',
   abi: OneMONABI,
   chainId: monadMainnet.id,
 };
@@ -134,13 +134,6 @@ function NadsMaker() {
     return threshold > 0 ? Math.min((current / threshold) * 100, 100) : 0;
   };
 
-  const isThresholdMet = () => {
-    if (!raffleInfo) return false;
-    const current = Number(raffleInfo[4]);
-    const threshold = Number(raffleInfo[2]);
-    return current >= threshold;
-  };
-
   const isLastRoundThresholdMet = () => {
     if (!lastRaffleInfo) return false;
     const current = Number(lastRaffleInfo[4]);
@@ -232,6 +225,40 @@ function NadsMaker() {
 
   const raffleStatus = getRaffleStatus();
 
+  // ============================================
+  // FAQ COMPONENT
+  // ============================================
+  const ImportantFAQs = () => (
+    <div className="faq-section">
+      <h2 className="faq-title">Important FAQs</h2>
+      
+      <div className="faq-item">
+        <p className="faq-question">1. Rewards/Refunds Mechanism</p>
+        <p className="faq-answer">The system calculates participants Rewards/Refunds first then include it in the Reserved Funds which an organizer/admin/developer can't drain/rug/transfer. This ensure that the participants would able to claim their Rewards/Refunds within 3 days without any problem.</p>
+      </div>
+
+      <div className="faq-item">
+        <p className="faq-question">2. Claim Windows</p>
+        <p className="faq-answer">Participants must claim their Rewards/Refunds within 3 days. All unclaimed Rewards/Refunds will be transferred to Treasury Address. Always claim within the deadline.</p>
+      </div>
+
+      <div className="faq-item">
+        <p className="faq-question">3. Wallet Integration</p>
+        <p className="faq-answer">This dApp uses WAGMI integration and for the best experience use "Metamask" wallet. If the popup confirmation shows "Likely to Fail" or "Network Error Fee", decline the confirmation and try again. DON'T RUSH and ALWAYS READ THE MESSAGE.</p>
+      </div>
+
+      <div className="faq-item">
+        <p className="faq-question">4. Threshold Mechanism</p>
+        <p className="faq-answer">If the participant threshold is not met by the end date, the raffle is considered unsuccessful and all participants can claim a full refund of their 1 MON participation fee.</p>
+      </div>
+
+      <div className="faq-item">
+        <p className="faq-question">5. Winning Participant</p>
+        <p className="faq-answer">A participant will be selected using Pyth Network's verifiable randomness (VRF), ensuring a fair and tamper-proof selection process.</p>
+      </div>
+    </div>
+  );
+
   return (
     <div className="nads-container">
       <header className="nads-header">
@@ -286,7 +313,7 @@ function NadsMaker() {
                 </div>
                 <div className="raffle-row">
                   <span className="raffle-label">Threshold</span>
-                  <span className="raffle-value">{displayData.threshold} MON</span>
+                  <span className="raffle-value">{displayData.threshold} Participants</span>
                 </div>
               </div>
 
@@ -294,7 +321,7 @@ function NadsMaker() {
               <div className="progress-section">
                 <div className="progress-header">
                   <span>Progress</span>
-                  <span>{displayData.currentProgress} / {displayData.threshold} MON</span>
+                  <span>{displayData.currentProgress} / {displayData.threshold} Participants</span>
                 </div>
                 <div className="progress-bar">
                   <div 
@@ -326,7 +353,7 @@ function NadsMaker() {
                   className="agreement-checkbox"
                 />
                 <span className="agreement-text">
-                  By checking this box, I confirm that I have read, understood, and agree to the Guidelines, including all disclaimers. I acknowledge that this raffle is for entertainment purposes only, not a financial investment or gambling activity, and that participation involves risks, including potential loss of MON. I further agree to comply with all applicable laws in my jurisdiction.
+                  By checking this box, I confirm that I have read, understood, and agree to the Guidelines. I acknowledge that this raffle is for entertainment purposes only, not a financial investment or gambling activity, and that participation involves risks, including potential loss of MON. I further agree to comply with all applicable laws in my jurisdiction.
                 </span>
               </label>
 
@@ -385,7 +412,7 @@ function NadsMaker() {
                 <div className="progress-section">
                   <div className="progress-header">
                     <span>Final Progress</span>
-                    <span>{lastRoundData.currentProgress} / {lastRoundData.threshold} MON</span>
+                    <span>{lastRoundData.currentProgress} / {lastRoundData.threshold} Participants</span>
                   </div>
                   <div className="progress-bar">
                     <div 
@@ -420,7 +447,7 @@ function NadsMaker() {
                 </div>
                 <div className="raffle-row">
                   <span className="raffle-label">Threshold</span>
-                  <span className="raffle-value">{displayData.threshold} MON</span>
+                  <span className="raffle-value">{displayData.threshold} Participants</span>
                 </div>
               </div>
 
@@ -430,6 +457,9 @@ function NadsMaker() {
             <p className="no-raffle-message">No active raffle at the moment. Check back soon!</p>
           )}
         </div>
+
+        {/* Important FAQs - Separate Section */}
+        <ImportantFAQs />
       </main>
     </div>
   );

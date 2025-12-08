@@ -4,7 +4,7 @@ import { useAccount, useConnect, useDisconnect, useReadContract, useReadContract
 import { ADMIN_ADDRESS } from '../walletIntegration/config';
 import OneMONABI from '../abi/OneMON.json';
 
-const CONTRACT_ADDRESS = '0x3A4Df4c34ff710f9F81347020eb5ff83dF4dF4BE';
+const CONTRACT_ADDRESS = '0x26A56f3245161CE7938200F1366A1cf9549c7e20';
 const ENTRY_FEE = 1;
 
 function MonAnalytics() {
@@ -35,12 +35,12 @@ function MonAnalytics() {
     functionName: 'nextRaffleId',
   });
 
-  // Generate raffle IDs for last 24 raffles
+  // Generate raffle IDs - only for raffles that exist
   const raffleIds = useMemo(() => {
-    if (!nextRaffleId) return [];
-    const count = Math.min(24, Number(nextRaffleId) - 1);
-    const start = Math.max(1, Number(nextRaffleId) - 24);
-    return Array.from({ length: count }, (_, i) => start + i);
+    if (!nextRaffleId || nextRaffleId <= 1) return [];
+    const lastRaffleId = Number(nextRaffleId) - 1;
+    const startId = Math.max(1, lastRaffleId - 23);
+    return Array.from({ length: lastRaffleId - startId + 1 }, (_, i) => startId + i);
   }, [nextRaffleId]);
 
   // Batch read all raffle info
@@ -109,8 +109,11 @@ function MonAnalytics() {
       const completedRaffles = raffles.filter(r => r.state === 5 && r.rewardClaimed);
       const totalRewards = completedRaffles.reduce((sum, r) => sum + r.rewardAmount, 0);
       const totalMon = raffles.reduce((sum, r) => sum + (r.participantCount * ENTRY_FEE), 0);
-      const avgParticipants = raffles.length > 0 
-        ? Math.floor(raffles.reduce((sum, r) => sum + r.participantCount, 0) / raffles.length) 
+      
+      // Filter out raffles with 0 participants before calculating average
+      const rafflesWithParticipants = raffles.filter(r => r.participantCount > 0);
+      const avgParticipants = rafflesWithParticipants.length > 0 
+        ? Math.floor(rafflesWithParticipants.reduce((sum, r) => sum + r.participantCount, 0) / rafflesWithParticipants.length) 
         : 0;
 
       // Map each raffle to chart data
@@ -137,7 +140,7 @@ function MonAnalytics() {
       setError('Analytics is currently not syncing or working');
       setIsLoading(false);
     }
-  }, [rafflesData, participantsData, rafflesLoading, participantsLoading, rafflesError, participantsError]);
+  }, [rafflesData, participantsData, rafflesLoading, participantsLoading, rafflesError, participantsError, raffleIds]);
 
   // Animate numbers
   useEffect(() => {
@@ -268,7 +271,7 @@ function MonAnalytics() {
           <button className="docs-btn" onClick={() => navigate('/docs')}>Documentation</button>
           {isAdmin && (
             <button className="admin-btn" onClick={() => navigate('/admin')}>Admin</button>
-          )}
+            )}
         </div>
         <div className="nads-nav">
           <button className="nads-btn" onClick={() => navigate('/1mon')}>1 MON</button>
