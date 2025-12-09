@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAccount, useConnect, useDisconnect, useWriteContract, useWaitForTransactionReceipt, useReadContract, useSwitchChain } from 'wagmi';
 import { parseEther, formatEther } from 'viem';
@@ -29,6 +29,9 @@ function NadsMaker() {
   const [currentRaffleId, setCurrentRaffleId] = useState(null);
 
   const isAdmin = isConnected && address?.toLowerCase() === ADMIN_ADDRESS.toLowerCase();
+
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef(null);
 
   // Get active raffle IDs
   const { data: activeRaffleIds } = useReadContract({
@@ -225,6 +228,17 @@ function NadsMaker() {
 
   const raffleStatus = getRaffleStatus();
 
+  const toggleMusic = () => {
+  if (audioRef.current) {
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  }
+  };
+
   // ============================================
   // FAQ COMPONENT
   // ============================================
@@ -286,9 +300,28 @@ function NadsMaker() {
         <button className="sub-nav-btn" onClick={() => navigate('/1mon-analytics')}>Analytics</button>
       </div>
       
-      <main className="nads-main">
+<main className="nads-main">
         <div className="raffle-panel">
-          <h1 className="raffle-title">1 MON and A Dream</h1>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px', marginBottom: '10px' }}>
+            <h1 className="raffle-title" style={{ marginBottom: 0 }}>1 MON and A Dream</h1>
+            <button 
+              onClick={toggleMusic}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '24px',
+                transition: 'transform 0.2s',
+                padding: '5px'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.2)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              {isPlaying ? '🔊' : '🔇'}
+            </button>
+          </div>
+
+          <audio ref={audioRef} src="/1_MON_and_a_Dream.m4a" loop />
           
           {raffleStatus.status === 'live' ? (
             <>
