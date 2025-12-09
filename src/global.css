@@ -149,9 +149,16 @@ body {
   text-shadow: 2px 2px 0px #000, 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
+.nads-header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 .nads-nav {
   display: flex;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .nads-btn {
@@ -200,6 +207,42 @@ body {
   box-shadow: 4px 4px 0px #555, 0 0 20px rgba(255, 0, 0, 0.4);
 }
 
+.docs-btn {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8px;
+  padding: 10px 16px;
+  background: #000;
+  color: #fff;
+  border: 2px solid #333;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px #000;
+  transition: all 0.1s ease;
+}
+
+.docs-btn:hover {
+  background: #1a1a1a;
+  border-color: #555;
+}
+
+.admin-btn {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8px;
+  padding: 10px 16px;
+  background: #222;
+  color: #fff;
+  border: 2px solid #444;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px #000;
+  transition: all 0.1s ease;
+}
+
+.admin-btn:hover {
+  background: #333;
+  border-color: #ff0000;
+  color: #ff0000;
+  box-shadow: 4px 4px 0px #000;
+}
+
 .nads-main {
   flex: 1;
   display: flex;
@@ -216,6 +259,61 @@ body {
   color: #666;
   text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
   animation: pulse 2s ease-in-out infinite;
+}
+
+/* Responsive Header */
+@media (max-width: 1024px) {
+  .nads-header {
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 15px 20px;
+  }
+  
+  .nads-header-left {
+    gap: 10px;
+  }
+  
+  .nads-logo {
+    font-size: 14px;
+  }
+  
+  .nads-btn, .docs-btn, .admin-btn {
+    font-size: 8px;
+    padding: 10px 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nads-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .nads-header-left {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .nads-nav {
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .nads-btn {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nads-btn, .docs-btn, .admin-btn {
+    font-size: 7px;
+    padding: 8px 12px;
+  }
+  
+  .nads-btn {
+    flex: 1 1 100%;
+  }
 }
 
 /* FAQ Section */
@@ -287,30 +385,6 @@ body {
   .faq-answer {
     font-size: 13px;
   }
-}
-
-/* Documentation Button */
-.nads-header-left {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.docs-btn {
-  font-family: 'Press Start 2P', cursive;
-  font-size: 8px;
-  padding: 10px 16px;
-  background: #000;
-  color: #fff;
-  border: 2px solid #333;
-  cursor: pointer;
-  box-shadow: 3px 3px 0px #000;
-  transition: all 0.1s ease;
-}
-
-.docs-btn:hover {
-  background: #1a1a1a;
-  border-color: #555;
 }
 
 /* Documentation Page */
@@ -680,36 +754,6 @@ body {
   color: #fbbf24;
 }
 
-/* Documentation Notice Box */
-.docs-notice {
-  background: rgba(251, 191, 36, 0.1);
-  border: 2px solid #f59e0b;
-  border-radius: 8px;
-  padding: 24px;
-  margin: 32px 0;
-}
-
-.docs-notice h3 {
-  font-size: 18px;
-  color: #fbbf24;
-  margin-bottom: 16px;
-  margin-top: 0;
-}
-
-.docs-notice ul {
-  margin-left: 0;
-  margin-bottom: 0;
-}
-
-.docs-notice li {
-  color: #d4d4d8;
-}
-
-.docs-notice li::before {
-  content: '⚠';
-  color: #fbbf24;
-}
-
 /* Sidebar Links */
 .docs-sidebar-links {
   display: flex;
@@ -970,7 +1014,7 @@ body {
     transform: translate(0, -20px) rotate(5deg) scale(1.1);
   }
   80% {
-    transform: translate(0, 5px) rotate(-3deg) scale(0.95);
+    transform: translate(0, 5px);
   }
   100% {
     opacity: 1;
@@ -1815,176 +1859,173 @@ padding: 15px;
 
 /* Previous Raffle Page */
 .prev-raffle-main {
-flex-direction: column;
-padding: 30px 20px;
-overflow-y: auto;
+  flex-direction: column;
+  padding: 30px 20px;
+  overflow-y: auto;
 }
 
 .page-title {
-font-family: 'Press Start 2P', cursive;
-font-size: 18px;
-color: #fff;
-text-align: center;
-margin-bottom: 30px;
-text-shadow: 2px 2px 0px #000;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 18px;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 0px #000;
 }
 
 .prev-raffle-container {
-display: flex;
-gap: 20px;
-overflow-x: auto;
-padding: 10px;
-max-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 10px;
+  max-width: 100%;
+  width: 100%;
 }
 
 .prev-raffle-card {
-min-width: 280px;
-max-width: 280px;
-background: rgba(0, 0, 0, 0.9);
-border: 2px solid #333;
-border-radius: 8px;
-padding: 20px;
-box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-transition: transform 0.2s, box-shadow 0.2s;
+  background: rgba(0, 0, 0, 0.9);
+  border: 2px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .prev-raffle-card:hover {
-transform: translateY(-5px);
-box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
 }
 
 .prev-raffle-card.successful {
-border-color: #22c55e;
+  border-color: #22c55e;
 }
 
 .prev-raffle-card.unsuccessful {
-border-color: #ef4444;
+  border-color: #ef4444;
 }
 
 .raffle-card-status {
-font-family: 'Press Start 2P', cursive;
-font-size: 10px;
-text-align: center;
-padding: 8px;
-border-radius: 4px;
-margin-bottom: 15px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  text-align: center;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 15px;
 }
 
 .raffle-card-status.successful {
-color: #4ade80;
-background: rgba(34, 197, 94, 0.1);
-border: 1px solid #22c55e;
+  color: #4ade80;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid #22c55e;
 }
 
 .raffle-card-status.unsuccessful {
-color: #f87171;
-background: rgba(239, 68, 68, 0.1);
-border: 1px solid #ef4444;
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid #ef4444;
 }
 
 .raffle-card-dates {
-display: flex;
-justify-content: center;
-align-items: center;
-gap: 10px;
-font-family: 'Press Start 2P', cursive;
-font-size: 8px;
-color: #888;
-margin-bottom: 20px;
-padding-bottom: 15px;
-border-bottom: 1px solid #222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8px;
+  color: #888;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #222;
 }
 
 .date-separator {
-color: #555;
+  color: #555;
 }
 
 .raffle-card-info {
-display: flex;
-flex-direction: column;
-gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .raffle-card-row {
-display: flex;
-justify-content: space-between;
-align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .card-label {
-font-family: 'Press Start 2P', cursive;
-font-size: 7px;
-color: #666;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 7px;
+  color: #666;
 }
 
 .card-value {
-font-family: 'Press Start 2P', cursive;
-font-size: 8px;
-color: #fff;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8px;
+  color: #fff;
 }
 
 .card-value.highlight {
-color: #fbbf24;
-text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+  color: #fbbf24;
+  text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
 }
 
 .card-value.warning {
-color: #f87171;
+  color: #f87171;
 }
 
 .card-value.success-text {
-color: #4ade80;
-font-size: 7px;
+  color: #4ade80;
+  font-size: 7px;
 }
 
 .card-value.clickable {
-color: #60a5fa;
-cursor: pointer;
-transition: color 0.2s;
+  color: #60a5fa;
+  cursor: pointer;
+  transition: color 0.2s;
 }
 
 .card-value.clickable:hover {
-color: #93c5fd;
-text-decoration: underline;
-}
-
-/* Scrollbar for raffle container */
-.prev-raffle-container::-webkit-scrollbar {
-height: 8px;
-}
-.prev-raffle-container::-webkit-scrollbar-track {
-background: #0a0a0a;
-border-radius: 4px;
-}
-.prev-raffle-container::-webkit-scrollbar-thumb {
-background: #333;
-border-radius: 4px;
-}
-.prev-raffle-container::-webkit-scrollbar-thumb:hover {
-background: #555;
+  color: #93c5fd;
+  text-decoration: underline;
 }
 
 @media (max-width: 768px) {
-.page-title {
-font-size: 14px;
+  .page-title {
+    font-size: 14px;
+  }
+  
+  .prev-raffle-container {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+  }
+  
+  .prev-raffle-card {
+    padding: 15px;
+  }
+  
+  .raffle-card-status {
+    font-size: 8px;
+  }
+  
+  .raffle-card-dates {
+    font-size: 7px;
+  }
+  
+  .card-label {
+    font-size: 6px;
+  }
+  
+  .card-value {
+    font-size: 7px;
+  }
 }
-.prev-raffle-card {
-min-width: 250px;
-max-width: 250px;
-padding: 15px;
-}
-.raffle-card-status {
-font-size: 8px;
-}
-.raffle-card-dates {
-font-size: 7px;
-}
-.card-label {
-font-size: 6px;
-}
-.card-value {
-font-size: 7px;
-}
+
+@media (max-width: 600px) {
+  .prev-raffle-container {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Analytics Page */
