@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
-import { ADMIN_ADDRESS } from '../walletIntegration/config';
+import Header from './Header';
+import '../css/nftDraw.css';
 import skrumpey from '../assets/skrumpey_1153_pfp.png';
 
 const cardColors = [
@@ -15,25 +14,7 @@ const cardColors = [
 const cardImages = [skrumpey, null, null, null, null];
 
 function NFTDraw() {
-  const navigate = useNavigate();
-  const { address, isConnected } = useAccount();
-  const { connect, connectors } = useConnect();
-  const { disconnect } = useDisconnect();
   const [revealedCards, setRevealedCards] = useState([false, false, false, false, false]);
-
-  const isAdmin = isConnected && address?.toLowerCase() === ADMIN_ADDRESS.toLowerCase();
-
-  const handleWalletClick = () => {
-    if (isConnected) {
-      disconnect();
-    } else {
-      connect({ connector: connectors[0] });
-    }
-  };
-
-  const shortenAddress = (addr) => {
-    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
-  };
 
   const handleCardClick = (index) => {
     if (cardImages[index]) {
@@ -47,23 +28,7 @@ function NFTDraw() {
 
   return (
     <div className="nads-container">
-      <header className="nads-header">
-        <div className="nads-header-left">
-          <div className="nads-logo">NadsMaker</div>
-          <button className="docs-btn" onClick={() => navigate('/docs')}>Documentation</button>
-          {isAdmin && (
-            <button className="admin-btn" onClick={() => navigate('/admin')}>Admin</button>
-          )}
-        </div>
-        <div className="nads-nav">
-          <button className="nads-btn" onClick={() => navigate('/1mon')}>1 MON</button>
-          <button className="nads-btn" onClick={() => navigate('/nft-draw')}>NFT Draw</button>
-          <button className="nads-btn" onClick={() => navigate('/profile')}>Profile</button>
-          <button className="nads-btn primary" onClick={handleWalletClick}>
-            {isConnected ? shortenAddress(address) : 'Connect Wallet'}
-          </button>
-        </div>
-      </header>
+      <Header />
       
       <main className="nads-main">
         <div className="nft-draw-wrapper">

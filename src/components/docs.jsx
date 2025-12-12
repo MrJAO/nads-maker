@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../css/docs.css';
 
 function Docs() {
   const [activeTab, setActiveTab] = useState('guidelines');

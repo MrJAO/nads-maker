@@ -1,0 +1,201 @@
+/* Header Styles */
+.nads-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  background: rgba(0, 0, 0, 0.8);
+  border-bottom: 2px solid #333;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 100;
+}
+
+.nads-logo {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 18px;
+  color: #fff;
+  text-shadow: 2px 2px 0px #000, 0 0 10px rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.nads-logo:hover {
+  color: #ff0000;
+}
+
+/* Hamburger Button */
+.hamburger-btn {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 24px;
+  padding: 10px 15px;
+  background: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px #555;
+  transition: all 0.1s ease;
+}
+
+.hamburger-btn:hover {
+  background: #1a1a1a;
+  border-color: #ff0000;
+  color: #ff0000;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #555;
+}
+
+.hamburger-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px #555;
+}
+
+.hamburger-icon {
+  display: block;
+  line-height: 1;
+}
+
+/* Menu Overlay */
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 998;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 30px;
+  background: rgba(0, 0, 0, 0.95);
+  border: 2px solid #fff;
+  border-radius: 8px;
+  padding: 10px;
+  min-width: 250px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.2);
+  z-index: 999;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.menu-item {
+  width: 100%;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  padding: 15px 20px;
+  background: #0a0a0a;
+  color: #fff;
+  border: 2px solid #333;
+  cursor: pointer;
+  text-align: left;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+  text-shadow: 1px 1px 0px #000;
+}
+
+.menu-item:last-child {
+  margin-bottom: 0;
+}
+
+.menu-item:hover {
+  background: #1a1a1a;
+  border-color: #ff0000;
+  color: #ff0000;
+  transform: translateX(5px);
+}
+
+.menu-item:active {
+  transform: translateX(2px);
+}
+
+.menu-item.admin-item {
+  background: #222;
+  border-color: #444;
+}
+
+.menu-item.admin-item:hover {
+  background: #333;
+  border-color: #ff0000;
+  color: #ff0000;
+}
+
+.menu-item.wallet-item {
+  background: #000;
+  border-color: #fff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.menu-item.wallet-item:hover {
+  background: #1a1a1a;
+  border-color: #ff0000;
+  color: #ff0000;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nads-header {
+    padding: 15px 20px;
+  }
+
+  .nads-logo {
+    font-size: 14px;
+  }
+
+  .hamburger-btn {
+    font-size: 20px;
+    padding: 8px 12px;
+  }
+
+  .dropdown-menu {
+    right: 20px;
+    min-width: 200px;
+  }
+
+  .menu-item {
+    font-size: 8px;
+    padding: 12px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nads-logo {
+    font-size: 12px;
+  }
+
+  .hamburger-btn {
+    font-size: 18px;
+    padding: 6px 10px;
+  }
+
+  .dropdown-menu {
+    right: 10px;
+    left: 10px;
+    min-width: auto;
+  }
+
+  .menu-item {
+    font-size: 7px;
+    padding: 10px 12px;
+  }
+}

@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAccount, useConnect, useDisconnect, useWriteContract, useWaitForTransactionReceipt, useSwitchChain, useReadContract } from 'wagmi';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useSwitchChain, useReadContract } from 'wagmi';
 import { parseEther, formatEther } from 'viem';
 import { ADMIN_ADDRESS, monadMainnet } from '../walletIntegration/config';
 import OneMONABI from '../abi/OneMON.json';
+import Header from '../components/Header';
+import '../css/admin.css';
 
 // ============================================
 // CONTRACT CONFIGURATION
@@ -22,8 +24,6 @@ const toUnixTimestamp = (dateString) => {
 function Admin() {
   const navigate = useNavigate();
   const { address, isConnected } = useAccount();
-  const { connect, connectors } = useConnect();
-  const { disconnect } = useDisconnect();
   const { writeContract, data: hash } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
   const { switchChain } = useSwitchChain();
@@ -32,6 +32,7 @@ function Admin() {
 
   // Tab state
   const [activeTab, setActiveTab] = useState('create');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   // Form states
   const [rewards, setRewards] = useState('');
@@ -85,18 +86,6 @@ function Admin() {
       refetchWithdrawable();
     }
   }, [isSuccess, refetchActiveRaffles, refetchWithdrawable]);
-
-  const handleWalletClick = () => {
-    if (isConnected) {
-      disconnect();
-    } else {
-      connect({ connector: connectors[0] });
-    }
-  };
-
-  const shortenAddress = (addr) => {
-    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
-  };
 
   // ============================================
   // CONTRACT INTERACTIONS
@@ -492,27 +481,22 @@ function Admin() {
   };
 
   // ============================================
-  // HEADER COMPONENT
+  // ADMIN SUB NAVIGATION
   // ============================================
-  const Header = ({ showAdmin = false }) => (
-    <header className="nads-header">
-      <div className="nads-header-left">
-        <div className="nads-logo">NadsMaker</div>
-        <button className="docs-btn" onClick={() => navigate('/docs')}>Documentation</button>
-        {showAdmin && (
-          <button className="admin-btn" onClick={() => navigate('/admin')}>Admin</button>
-        )}
-      </div>
-      <div className="nads-nav">
-        <button className="nads-btn accent" onClick={() => navigate('/1mon')}>1 MON</button>
-        <button className="nads-btn" onClick={() => navigate('/nft-draw')}>NFT Draw</button>
-        <button className="nads-btn" onClick={() => navigate('/profile')}>Profile</button>
-        <button className="nads-btn primary" onClick={handleWalletClick}>
-          {isConnected ? shortenAddress(address) : 'Connect Wallet'}
-        </button>
-      </div>
-    </header>
-  );
+  const tabItems = [
+    { label: 'Create Event', value: 'create' },
+    { label: 'NFT Draw', value: 'nftdraw' },
+    { label: 'Nads Raffle', value: 'nadsraffle' },
+    { label: 'Finalize/Cleanup', value: 'finalize' },
+    { label: 'Treasury', value: 'treasury' }
+  ];
+
+  const currentTabLabel = tabItems.find(item => item.value === activeTab)?.label || 'Create Event';
+
+  const handleTabChange = (value) => {
+    setActiveTab(value);
+    setDropdownOpen(false);
+  };
 
   // Render tab content
   const renderTabContent = () => {
@@ -559,40 +543,34 @@ function Admin() {
   // Admin view
   return (
     <div className="nads-container">
-      <Header showAdmin={true} />
+      <Header />
 
-      {/* Tab Navigation */}
-      <div className="sub-nav">
+      {/* Admin Sub Navigation */}
+      <div className="admin-sub-nav-container">
         <button 
-          className={`sub-nav-btn ${activeTab === 'create' ? 'active' : ''}`}
-          onClick={() => setActiveTab('create')}
+          className="admin-sub-nav-dropdown-btn"
+          onClick={() => setDropdownOpen(!dropdownOpen)}
         >
-          Create Event
+          <span className="current-label">{currentTabLabel}</span>
+          <span className="dropdown-arrow">{dropdownOpen ? '▲' : '▼'}</span>
         </button>
-        <button 
-          className={`sub-nav-btn ${activeTab === 'nftdraw' ? 'active' : ''}`}
-          onClick={() => setActiveTab('nftdraw')}
-        >
-          NFT Draw
-        </button>
-        <button 
-          className={`sub-nav-btn ${activeTab === 'nadsraffle' ? 'active' : ''}`}
-          onClick={() => setActiveTab('nadsraffle')}
-        >
-          Nads Raffle
-        </button>
-        <button 
-          className={`sub-nav-btn ${activeTab === 'finalize' ? 'active' : ''}`}
-          onClick={() => setActiveTab('finalize')}
-        >
-          Finalize/Cleanup
-        </button>
-        <button 
-          className={`sub-nav-btn ${activeTab === 'treasury' ? 'active' : ''}`}
-          onClick={() => setActiveTab('treasury')}
-        >
-          Treasury
-        </button>
+
+        {dropdownOpen && (
+          <>
+            <div className="admin-sub-nav-overlay" onClick={() => setDropdownOpen(false)}></div>
+            <div className="admin-sub-nav-dropdown">
+              {tabItems.map((item) => (
+                <button
+                  key={item.value}
+                  className={`admin-sub-nav-item ${activeTab === item.value ? 'active' : ''}`}
+                  onClick={() => handleTabChange(item.value)}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
       </div>
       
       <main className="nads-main">

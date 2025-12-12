@@ -1,8 +1,10 @@
-import { useNavigate } from 'react-router-dom';
-import { useAccount, useConnect, useDisconnect, useReadContract } from 'wagmi';
+import { useReadContract } from 'wagmi';
 import { formatEther } from 'viem';
-import { ADMIN_ADDRESS, monadMainnet } from '../walletIntegration/config';
+import { monadMainnet } from '../walletIntegration/config';
 import OneMONABI from '../abi/OneMON.json';
+import Header from './Header';
+import SubNav from './SubNav';
+import '../css/prevRaffle.css';
 
 const CONTRACT_CONFIG = {
   address: '0x26A56f3245161CE7938200F1366A1cf9549c7e20',
@@ -11,12 +13,6 @@ const CONTRACT_CONFIG = {
 };
 
 function PrevRaffle() {
-  const navigate = useNavigate();
-  const { address, isConnected } = useAccount();
-  const { connect, connectors } = useConnect();
-  const { disconnect } = useDisconnect();
-
-  const isAdmin = isConnected && address?.toLowerCase() === ADMIN_ADDRESS.toLowerCase();
 
   // Get total raffle count
   const { data: nextRaffleId } = useReadContract({
@@ -24,18 +20,6 @@ function PrevRaffle() {
     abi: CONTRACT_CONFIG.abi,
     functionName: 'nextRaffleId',
   });
-
-  const handleWalletClick = () => {
-    if (isConnected) {
-      disconnect();
-    } else {
-      connect({ connector: connectors[0] });
-    }
-  };
-
-  const shortenAddress = (addr) => {
-    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
-  };
 
   const formatDate = (timestamp) => {
     return new Date(Number(timestamp) * 1000).toLocaleDateString('en-US', {
@@ -56,30 +40,8 @@ function PrevRaffle() {
 
   return (
     <div className="nads-container">
-      <header className="nads-header">
-        <div className="nads-header-left">
-          <div className="nads-logo">NadsMaker</div>
-          <button className="docs-btn" onClick={() => navigate('/docs')}>Documentation</button>
-          {isAdmin && (
-            <button className="admin-btn" onClick={() => navigate('/admin')}>Admin</button>
-          )}
-        </div>
-        <div className="nads-nav">
-          <button className="nads-btn" onClick={() => navigate('/1mon')}>1 MON</button>
-          <button className="nads-btn" onClick={() => navigate('/nft-draw')}>NFT Draw</button>
-          <button className="nads-btn" onClick={() => navigate('/profile')}>Profile</button>
-          <button className="nads-btn primary" onClick={handleWalletClick}>
-            {isConnected ? shortenAddress(address) : 'Connect Wallet'}
-          </button>
-        </div>
-      </header>
-
-      {/* Sub Navigation */}
-      <div className="sub-nav">
-        <button className="sub-nav-btn" onClick={() => navigate('/1mon')}>Live</button>
-        <button className="sub-nav-btn active">Previous Activities</button>
-        <button className="sub-nav-btn" onClick={() => navigate('/1mon-analytics')}>Analytics</button>
-      </div>
+      <Header />
+      <SubNav />
       
       <main className="nads-main prev-raffle-main">
         

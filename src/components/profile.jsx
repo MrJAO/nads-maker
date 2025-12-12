@@ -4,6 +4,8 @@ import { useAccount, useConnect, useDisconnect, useWriteContract, useWaitForTran
 import { formatEther } from 'viem';
 import { ADMIN_ADDRESS, monadMainnet } from '../walletIntegration/config';
 import OneMONABI from '../abi/OneMON.json';
+import Header from './Header';
+import '../css/profile.css';
 
 const CONTRACT_CONFIG = {
   address: '0x26A56f3245161CE7938200F1366A1cf9549c7e20',
@@ -236,23 +238,7 @@ function Profile() {
 
   return (
     <div className="nads-container">
-      <header className="nads-header">
-        <div className="nads-header-left">
-          <div className="nads-logo">NadsMaker</div>
-          <button className="docs-btn" onClick={() => navigate('/docs')}>Documentation</button>
-          {isAdmin && (
-            <button className="admin-btn" onClick={() => navigate('/admin')}>Admin</button>
-          )}
-        </div>
-        <div className="nads-nav">
-          <button className="nads-btn" onClick={() => navigate('/1mon')}>1 MON</button>
-          <button className="nads-btn" onClick={() => navigate('/nft-draw')}>NFT Draw</button>
-          <button className="nads-btn" onClick={() => navigate('/profile')}>Profile</button>
-          <button className="nads-btn primary" onClick={handleWalletClick}>
-            {isConnected ? shortenAddress(address) : 'Connect Wallet'}
-          </button>
-        </div>
-      </header>
+      <Header />
 
       <main className="nads-main profile-main">
         {!isConnected ? (

@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAccount, useConnect, useDisconnect, useWriteContract, useWaitForTransactionReceipt, useReadContract, useSwitchChain } from 'wagmi';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, useSwitchChain } from 'wagmi';
 import { parseEther, formatEther } from 'viem';
-import { ADMIN_ADDRESS, monadMainnet } from '../walletIntegration/config';
+import { monadMainnet } from '../walletIntegration/config';
 import OneMONABI from '../abi/OneMON.json';
+import Header from './Header';
+import SubNav from './SubNav';
+import '../css/NadsMaker.css';
 
 // ============================================
 // CONTRACT CONFIGURATION
@@ -17,8 +20,6 @@ const CONTRACT_CONFIG = {
 function NadsMaker() {
   const navigate = useNavigate();
   const { address, isConnected } = useAccount();
-  const { connect, connectors } = useConnect();
-  const { disconnect } = useDisconnect();
   const { writeContract, data: hash } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
   const { switchChain } = useSwitchChain();
@@ -27,8 +28,6 @@ function NadsMaker() {
   const [isLoading, setIsLoading] = useState(false);
   const [txStatus, setTxStatus] = useState('');
   const [currentRaffleId, setCurrentRaffleId] = useState(null);
-
-  const isAdmin = isConnected && address?.toLowerCase() === ADMIN_ADDRESS.toLowerCase();
 
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
@@ -101,18 +100,6 @@ function NadsMaker() {
     }
   }, [isSuccess, refetchRaffleInfo, refetchParticipation]);
 
-  const handleWalletClick = () => {
-    if (isConnected) {
-      disconnect();
-    } else {
-      connect({ connector: connectors[0] });
-    }
-  };
-
-  const shortenAddress = (addr) => {
-    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
-  };
-
   const formatDate = (timestamp) => {
     return new Date(Number(timestamp) * 1000).toLocaleString('en-US', {
       month: 'short',
@@ -168,11 +155,6 @@ function NadsMaker() {
   // CONTRACT INTERACTION - Participate in Raffle
   // ============================================
   const handleParticipate = async () => {
-    if (!isConnected) {
-      connect({ connector: connectors[0] });
-      return;
-    }
-
     if (!currentRaffleId || !getRaffleStatus().canJoin || hasParticipated) {
       setTxStatus('error');
       return;
@@ -275,30 +257,8 @@ function NadsMaker() {
 
   return (
     <div className="nads-container">
-      <header className="nads-header">
-        <div className="nads-header-left">
-          <div className="nads-logo">NadsMaker</div>
-          <button className="docs-btn" onClick={() => navigate('/docs')}>Documentation</button>
-          {isAdmin && (
-            <button className="admin-btn" onClick={() => navigate('/admin')}>Admin</button>
-          )}
-        </div>
-        <div className="nads-nav">
-          <button className="nads-btn" onClick={() => navigate('/1mon')}>1 MON</button>
-          <button className="nads-btn" onClick={() => navigate('/nft-draw')}>NFT Draw</button>
-          <button className="nads-btn" onClick={() => navigate('/profile')}>Profile</button>
-          <button className="nads-btn primary" onClick={handleWalletClick}>
-            {isConnected ? shortenAddress(address) : 'Connect Wallet'}
-          </button>
-        </div>
-      </header>
-
-      {/* Sub Navigation */}
-      <div className="sub-nav">
-        <button className="sub-nav-btn active">Live</button>
-        <button className="sub-nav-btn" onClick={() => navigate('/prev-raffle')}>Previous Activities</button>
-        <button className="sub-nav-btn" onClick={() => navigate('/1mon-analytics')}>Analytics</button>
-      </div>
+      <Header />
+      <SubNav />
       
 <main className="nads-main">
         <div className="raffle-panel">

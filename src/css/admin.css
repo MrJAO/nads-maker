@@ -1,0 +1,596 @@
+/* Admin Button */
+.admin-btn {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8px;
+  padding: 10px 16px;
+  background: #222;
+  color: #fff;
+  border: 2px solid #444;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px #000;
+  transition: all 0.1s ease;
+}
+
+.admin-btn:hover {
+  background: #333;
+  border-color: #ff0000;
+  color: #ff0000;
+  box-shadow: 4px 4px 0px #000;
+}
+
+/* Admin Sub Navigation - Centered Dropdown */
+.admin-sub-nav-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 20px;
+  background: rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid #222;
+  position: relative;
+  z-index: 50;
+}
+
+.admin-sub-nav-dropdown-btn {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  padding: 12px 25px;
+  background: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 3px 3px 0px #555;
+  transition: all 0.2s ease;
+  min-width: 250px;
+  justify-content: space-between;
+}
+
+.admin-sub-nav-dropdown-btn:hover {
+  background: #1a1a1a;
+  border-color: #ff0000;
+  color: #ff0000;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #555;
+}
+
+.admin-sub-nav-dropdown-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px #555;
+}
+
+.current-label {
+  flex: 1;
+  text-align: left;
+}
+
+.dropdown-arrow {
+  font-size: 8px;
+  transition: transform 0.2s;
+}
+
+/* Admin Sub Nav Overlay */
+.admin-sub-nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  z-index: 48;
+}
+
+/* Admin Sub Nav Dropdown */
+.admin-sub-nav-dropdown {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.95);
+  border: 2px solid #fff;
+  border-radius: 8px;
+  padding: 8px;
+  min-width: 250px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.2);
+  z-index: 49;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.admin-sub-nav-item {
+  width: 100%;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 9px;
+  padding: 12px 20px;
+  background: #0a0a0a;
+  color: #888;
+  border: 1px solid #333;
+  cursor: pointer;
+  text-align: left;
+  margin-bottom: 6px;
+  transition: all 0.2s ease;
+}
+
+.admin-sub-nav-item:last-child {
+  margin-bottom: 0;
+}
+
+.admin-sub-nav-item:hover {
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #555;
+  transform: translateX(5px);
+}
+
+.admin-sub-nav-item.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: #fff;
+}
+
+/* Fix Admin Page Scrolling */
+.nads-main:has(.admin-panel) {
+  display: block;
+  overflow-y: auto;
+  padding: 30px 20px;
+}
+
+/* Admin Panel */
+.admin-panel {
+  background: rgba(0, 0, 0, 0.9);
+  border: 2px solid #333;
+  border-radius: 8px;
+  padding: 40px;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+}
+
+.admin-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 18px;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 0px #000;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  color: #fff;
+}
+
+.form-input {
+  font-family: 'Calibri', sans-serif;
+  font-size: 16px;
+  padding: 12px 15px;
+  background: #0a0a0a;
+  color: #fff;
+  border: 2px solid #333;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  border-color: #fff;
+}
+
+.form-input::placeholder {
+  color: #666;
+}
+
+.radio-group {
+  display: flex;
+  gap: 10px;
+}
+
+.radio-btn {
+  flex: 1;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8px;
+  padding: 12px 10px;
+  background: #0a0a0a;
+  color: #888;
+  border: 2px solid #333;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.radio-btn:hover {
+  border-color: #555;
+  color: #aaa;
+}
+
+.radio-btn.active {
+  background: #222;
+  color: #fff;
+  border-color: #fff;
+}
+
+.submit-btn {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 12px;
+  padding: 15px 20px;
+  background: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 4px 4px 0px #555;
+  transition: all 0.1s ease;
+  margin-top: 10px;
+}
+
+.submit-btn:hover {
+  background: #ff0000;
+  box-shadow: 5px 5px 0px #555;
+  transform: translate(-1px, -1px);
+}
+
+.submit-btn:active {
+  box-shadow: 2px 2px 0px #555;
+  transform: translate(2px, 2px);
+}
+
+.form-placeholder {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  padding: 30px 0;
+}
+
+/* Admin Active Raffles Section */
+.active-raffles-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid #333;
+}
+
+.section-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 14px;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.no-raffles {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  color: #666;
+  text-align: center;
+  padding: 2rem;
+}
+
+.active-raffle-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid #333;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.2s;
+}
+
+.active-raffle-card:hover {
+  border-color: #555;
+}
+
+.raffle-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #333;
+}
+
+.raffle-id {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  color: #fff;
+}
+
+.raffle-state {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8px;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+.raffle-state.active {
+  color: #4ade80;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid #22c55e;
+}
+
+.raffle-state.expired {
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid #ef4444;
+}
+
+.raffle-card-body {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8px;
+  color: #aaa;
+  line-height: 2;
+  margin-bottom: 1rem;
+}
+
+.raffle-card-body p {
+  margin: 0.5rem 0;
+}
+
+.finalize-btn {
+  width: 100%;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  padding: 12px 20px;
+  background: #ff0000;
+  color: #fff;
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px #555;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.finalize-btn:hover:not(:disabled) {
+  background: #cc0000;
+  box-shadow: 4px 4px 0px #555;
+  transform: translate(-1px, -1px);
+}
+
+.finalize-btn:active:not(:disabled) {
+  box-shadow: 2px 2px 0px #555;
+  transform: translate(2px, 2px);
+}
+
+.finalize-btn:disabled {
+  background: #333;
+  border-color: #555;
+  color: #666;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.countdown-timer {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8px;
+  color: #fbbf24;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Treasury Panel */
+.treasury-panel {
+  margin-top: 2rem;
+}
+
+.treasury-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid #333;
+  border-radius: 8px;
+}
+
+.treasury-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.treasury-row.highlight {
+  padding: 1rem 0;
+  border-top: 2px solid #555;
+  margin-top: 0.5rem;
+}
+
+.treasury-label {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 9px;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.treasury-value {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  color: #fff;
+}
+
+.treasury-value.live {
+  color: #4ade80;
+}
+
+.treasury-value.highlight {
+  color: #fbbf24;
+  font-size: 12px;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+.treasury-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.treasury-btn {
+  background: #fbbf24;
+  color: #000;
+  border-color: #fbbf24;
+}
+
+.treasury-btn:hover:not(:disabled) {
+  background: #f59e0b;
+  border-color: #f59e0b;
+}
+
+.treasury-btn:disabled {
+  background: #333;
+  color: #666;
+  border-color: #555;
+}
+
+/* Transaction Status */
+.tx-status {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  padding: 12px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.tx-status.success {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  border: 1px solid #22c55e;
+}
+
+.tx-status.error {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border: 1px solid #ef4444;
+}
+
+.submit-btn:disabled,
+.radio-btn:disabled,
+.form-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-sub-nav-dropdown-btn {
+    font-size: 8px;
+    padding: 10px 20px;
+    min-width: 200px;
+  }
+
+  .admin-sub-nav-dropdown {
+    min-width: 200px;
+  }
+
+  .admin-sub-nav-item {
+    font-size: 7px;
+    padding: 10px 15px;
+  }
+
+  .nads-main:has(.admin-panel) {
+    padding: 20px 15px;
+  }
+
+  .admin-panel {
+    padding: 25px 15px;
+  }
+
+  .admin-title {
+    font-size: 14px;
+  }
+
+  .radio-group {
+    flex-direction: column;
+  }
+  
+  .section-title {
+    font-size: 12px;
+  }
+  
+  .active-raffle-card {
+    padding: 1rem;
+  }
+  
+  .raffle-id {
+    font-size: 8px;
+  }
+  
+  .raffle-state {
+    font-size: 7px;
+  }
+  
+  .raffle-card-body {
+    font-size: 7px;
+  }
+  
+  .finalize-btn {
+    font-size: 8px;
+    padding: 10px 15px;
+  }
+
+  .treasury-panel {
+    margin-top: 1.5rem;
+  }
+
+  .treasury-info {
+    padding: 1rem;
+  }
+
+  .treasury-label {
+    font-size: 8px;
+  }
+
+  .treasury-value {
+    font-size: 9px;
+  }
+
+  .treasury-value.highlight {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-sub-nav-dropdown-btn {
+    font-size: 7px;
+    padding: 8px 15px;
+    min-width: 180px;
+  }
+
+  .dropdown-arrow {
+    font-size: 6px;
+  }
+
+  .admin-sub-nav-dropdown {
+    min-width: 180px;
+    left: 10px;
+    right: 10px;
+    transform: none;
+  }
+
+  .admin-sub-nav-item {
+    font-size: 6px;
+    padding: 8px 12px;
+  }
+}
