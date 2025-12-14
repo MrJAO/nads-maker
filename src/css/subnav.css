@@ -10,6 +10,46 @@
   z-index: 50;
 }
 
+/* Desktop Horizontal Tabs */
+.sub-nav-tabs {
+  display: none;
+  gap: 15px;
+  align-items: center;
+}
+
+.sub-nav-tab {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  padding: 12px 25px;
+  background: #0a0a0a;
+  color: #888;
+  border: 2px solid #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 3px 3px 0px #555;
+}
+
+.sub-nav-tab:hover {
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #555;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #555;
+}
+
+.sub-nav-tab:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px #555;
+}
+
+.sub-nav-tab.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: #fff;
+  box-shadow: 3px 3px 0px #555, 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* Mobile Dropdown Button */
 .sub-nav-dropdown-btn {
   font-family: 'Press Start 2P', cursive;
   font-size: 10px;
@@ -117,6 +157,21 @@
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
   border-color: #fff;
+}
+
+/* Desktop Breakpoint */
+@media (min-width: 1024px) {
+  .sub-nav-tabs {
+    display: flex;
+  }
+
+  .sub-nav-dropdown-btn {
+    display: none;
+  }
+
+  .sub-nav-dropdown {
+    display: none;
+  }
 }
 
 /* Responsive */

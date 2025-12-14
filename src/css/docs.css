@@ -6,6 +6,61 @@
   display: flex;
   font-family: 'Inter', 'Segoe UI', sans-serif;
   color: #e8e8e8;
+  position: relative;
+}
+
+/* Mobile Hamburger Button */
+.docs-hamburger-btn {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 24px;
+  padding: 10px 15px;
+  background: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px #555;
+  transition: all 0.1s ease;
+  z-index: 1001;
+}
+
+.docs-hamburger-btn:hover {
+  background: #1a1a1a;
+  border-color: #836EF9;
+  color: #836EF9;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #555;
+}
+
+.docs-hamburger-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px #555;
+}
+
+.hamburger-icon {
+  display: block;
+  line-height: 1;
+}
+
+/* Overlay */
+.docs-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .docs-sidebar {
@@ -333,34 +388,30 @@
 }
 
 @media (max-width: 768px) {
-  .docs-container {
-    flex-direction: column;
+  .docs-hamburger-btn {
+    display: block;
+  }
+
+  .docs-overlay {
+    display: block;
   }
 
   .docs-sidebar {
-    width: 100%;
-    min-width: 100%;
-    height: auto;
-    position: relative;
-    border-right: none;
-    border-bottom: 1px solid #1a1a1a;
-    padding: 24px;
-    gap: 24px;
+    position: fixed;
+    top: 0;
+    left: -280px;
+    height: 100vh;
+    z-index: 1000;
+    transition: left 0.3s ease;
   }
 
-  .docs-nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .docs-nav-btn {
-    padding: 10px 14px;
-    font-size: 14px;
+  .docs-sidebar.open {
+    left: 0;
   }
 
   .docs-content {
-    padding: 32px 20px;
+    padding: 80px 20px 32px 20px;
+    width: 100%;
   }
 
   .docs-section h1 {
@@ -402,33 +453,19 @@
   }
   
   .docs-sidebar-links {
-    flex-direction: row;
-    flex-wrap: wrap;
-    border-top: none;
-    padding-top: 0;
+    flex-direction: column;
   }
   
   .sidebar-link {
-    flex: 1;
-    min-width: 120px;
+    width: 100%;
   }
   
   .sidebar-support {
-    flex-basis: 100%;
     font-size: 11px;
   }
 }
 
 @media (max-width: 480px) {
-  .docs-nav {
-    flex-direction: column;
-  }
-
-  .docs-nav-btn.active {
-    border-left: none;
-    border-bottom: 3px solid #836EF9;
-  }
-
   .docs-table th,
   .docs-table td {
     padding: 10px 12px;

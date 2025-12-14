@@ -24,6 +24,77 @@
   color: #ff0000;
 }
 
+/* Desktop Navigation */
+.desktop-nav {
+  display: none;
+  gap: 15px;
+  align-items: center;
+}
+
+.nav-btn {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  padding: 10px 20px;
+  background: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px #555;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-btn:hover {
+  background: #1a1a1a;
+  border-color: #ff0000;
+  color: #ff0000;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #555;
+}
+
+.nav-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px #555;
+}
+
+.nav-btn.admin-btn {
+  background: #222;
+  border-color: #444;
+}
+
+.nav-btn.admin-btn:hover {
+  background: #333;
+  border-color: #ff0000;
+  color: #ff0000;
+}
+
+/* Desktop Wallet Button */
+.desktop-wallet-btn {
+  display: none;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  padding: 10px 20px;
+  background: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px #555, 0 0 10px rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.desktop-wallet-btn:hover {
+  background: #1a1a1a;
+  border-color: #ff0000;
+  color: #ff0000;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #555, 0 0 15px rgba(255, 0, 0, 0.3);
+}
+
+.desktop-wallet-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px #555;
+}
+
 /* Hamburger Button */
 .hamburger-btn {
   font-family: 'Press Start 2P', cursive;
@@ -150,6 +221,25 @@
   border-color: #ff0000;
   color: #ff0000;
   box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+}
+
+/* Desktop Breakpoint */
+@media (min-width: 1024px) {
+  .desktop-nav {
+    display: flex;
+  }
+
+  .desktop-wallet-btn {
+    display: block;
+  }
+
+  .hamburger-btn {
+    display: none;
+  }
+
+  .dropdown-menu {
+    display: none;
+  }
 }
 
 /* Responsive */

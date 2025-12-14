@@ -7,7 +7,7 @@ import SubNav from './SubNav';
 import '../css/prevRaffle.css';
 
 const CONTRACT_CONFIG = {
-  address: '0x26A56f3245161CE7938200F1366A1cf9549c7e20',
+  address: '0x188E095Aab1f75E7F8c39480C45005854ef31fcB',
   abi: OneMONABI,
   chainId: monadMainnet.id,
 };
@@ -83,6 +83,7 @@ function RaffleCard({ raffleId }) {
   if (Date.now() / 1000 < endTime) return null;
 
   const isSuccessful = participantCount >= threshold;
+  const isCancelled = state === 6; // 6 = Cancelled
   const thresholdPercent = threshold > 0 ? ((participantCount / threshold) * 100).toFixed(0) : 0;
   const totalRefundAmount = participantCount;
 
@@ -102,17 +103,32 @@ function RaffleCard({ raffleId }) {
     window.open(`https://monadvision.com/address/${addr}`, '_blank');
   };
 
+  // Determine card type
+  const getCardType = () => {
+    if (isCancelled) return 'cancelled';
+    if (isSuccessful) return 'successful';
+    return 'unsuccessful';
+  };
+
+  const getStatusText = () => {
+    if (isCancelled) return '⊘ Cancelled';
+    if (isSuccessful) return '✓ Successful';
+    return '✗ Unsuccessful';
+  };
+
+  const cardType = getCardType();
+
   return (
-    <div className={`prev-raffle-card ${isSuccessful ? 'successful' : 'unsuccessful'}`}>
-      <div className={`raffle-card-status ${isSuccessful ? 'successful' : 'unsuccessful'}`}>
-        {isSuccessful ? '✓ Successful' : '✗ Unsuccessful'}
+    <div className={`prev-raffle-card ${cardType}`}>
+      <div className={`raffle-card-status ${cardType}`}>
+        {getStatusText()}
       </div>
 
       <div className="raffle-card-dates">
         <span>Ended: {formatDate(endTime)}</span>
       </div>
 
-      {isSuccessful ? (
+      {isSuccessful && !isCancelled ? (
         <div className="raffle-card-info">
           <div className="raffle-card-row">
             <span className="card-label">Raffle ID</span>
@@ -144,7 +160,7 @@ function RaffleCard({ raffleId }) {
           </div>
           <div className="raffle-card-row">
             <span className="card-label">Threshold</span>
-            <span className="card-value warning">{thresholdPercent}% filled</span>
+            <span className={`card-value ${isCancelled ? '' : 'warning'}`}>{thresholdPercent}% filled</span>
           </div>
           <div className="raffle-card-row">
             <span className="card-label">Total Refund</span>

@@ -4,34 +4,55 @@ import '../css/docs.css';
 
 function Docs() {
   const [activeTab, setActiveTab] = useState('guidelines');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setSidebarOpen(false);
+  };
 
   return (
     <div className="docs-container">
-      <aside className="docs-sidebar">
+      {/* Mobile Hamburger Button */}
+      <button 
+        className="docs-hamburger-btn"
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        aria-label="Menu"
+      >
+        <span className="hamburger-icon">☰</span>
+      </button>
+
+      {/* Overlay */}
+      {sidebarOpen && (
+        <div className="docs-overlay" onClick={() => setSidebarOpen(false)}></div>
+      )}
+
+      {/* Sidebar */}
+      <aside className={`docs-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="docs-title" onClick={() => navigate('/1mon')}>Documentation</div>
         <nav className="docs-nav">
           <button 
             className={`docs-nav-btn ${activeTab === 'guidelines' ? 'active' : ''}`}
-            onClick={() => setActiveTab('guidelines')}
+            onClick={() => handleTabChange('guidelines')}
           >
             Guidelines
           </button>
           <button 
             className={`docs-nav-btn ${activeTab === '/1mon' ? 'active' : ''}`}
-            onClick={() => setActiveTab('/1mon')}
+            onClick={() => handleTabChange('/1mon')}
           >
             1 MON and A Dream
           </button>
           <button 
             className={`docs-nav-btn ${activeTab === 'nftDraw' ? 'active' : ''}`}
-            onClick={() => setActiveTab('nftDraw')}
+            onClick={() => handleTabChange('nftDraw')}
           >
             NFT Draw
           </button>
           <button 
             className={`docs-nav-btn ${activeTab === 'contracts' ? 'active' : ''}`}
-            onClick={() => setActiveTab('contracts')}
+            onClick={() => handleTabChange('contracts')}
           >
             Smart Contract
           </button>
@@ -358,7 +379,7 @@ function Docs() {
             </ul>
 
             <h2>Contract Address</h2>
-            <p><code>0x26A56f3245161CE7938200F1366A1cf9549c7e20</code></p>
+            <p><code>0x188E095Aab1f75E7F8c39480C45005854ef31fcB</code></p>
           </div>
         )}
 
@@ -378,7 +399,7 @@ function Docs() {
 
             <h3>1. Eligibility Requirements</h3>
             <ul>
-              <li>Participate in at least <strong>8 raffles</strong> (successful or unsuccessful) in the "1 MON and A Dream" system</li>
+              <li>Participate in at least <strong>TBA</strong> (successful or unsuccessful) in the "1 MON and A Dream" system</li>
               <li>Both winning and non-winning raffle participations count toward eligibility</li>
               <li>Refunded raffles also count as participation</li>
               <li>Track your progress in the <strong>Profile</strong> tab</li>
@@ -394,7 +415,7 @@ function Docs() {
 
             <h3>3. Draw Schedule</h3>
             <ul>
-              <li><strong>Target frequency:</strong> One NFT Draw for every 8 completed raffles</li>
+              <li><strong>Target frequency:</strong> One NFT Draw for every (TBA) completed raffles</li>
               <li>Exact dates and times are <strong>To Be Announced (TBA)</strong></li>
               <li>Schedule is subject to change based on raffle activity and participation levels</li>
               <li>Announcements will be made via Twitter/X and updated in this documentation</li>
@@ -450,7 +471,7 @@ function Docs() {
                 </tr>
                 <tr>
                   <td>Smart Contract</td>
-                  <td>0x26A56f3245161CE7938200F1366A1cf9549c7e20</td>
+                  <td>0x188E095Aab1f75E7F8c39480C45005854ef31fcB</td>
                   <td>TBA (not yet deployed)</td>
                 </tr>
                 <tr>
@@ -495,8 +516,8 @@ function Docs() {
             <h1>Smart Contract</h1>
 
             <h2>1 MON and A Dream - Smart Contract</h2>
-            <p><code>0x26A56f3245161CE7938200F1366A1cf9549c7e20</code></p>
-            <p>View on MonadScan: <a href="https://monadscan.com/address/0x26A56f3245161CE7938200F1366A1cf9549c7e20" target="_blank" rel="noopener noreferrer">MonadScan Explorer</a></p>
+            <p><code>0x188E095Aab1f75E7F8c39480C45005854ef31fcB</code></p>
+            <p>View on MonadScan: <a href="https://monadscan.com/address/0x188E095Aab1f75E7F8c39480C45005854ef31fcB" target="_blank" rel="noopener noreferrer">MonadScan Explorer</a></p>
 
             <h2>Immutable Addresses</h2>
             <table className="docs-table">

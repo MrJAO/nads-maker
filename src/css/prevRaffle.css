@@ -45,6 +45,10 @@
   border-color: #ef4444;
 }
 
+.prev-raffle-card.cancelled {
+  border-color: #fbbf24;
+}
+
 .raffle-card-status {
   font-family: 'Press Start 2P', cursive;
   font-size: 10px;
@@ -64,6 +68,12 @@
   color: #f87171;
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid #ef4444;
+}
+
+.raffle-card-status.cancelled {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid #fbbf24;
 }
 
 .raffle-card-dates {

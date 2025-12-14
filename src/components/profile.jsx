@@ -8,7 +8,7 @@ import Header from './Header';
 import '../css/profile.css';
 
 const CONTRACT_CONFIG = {
-  address: '0x26A56f3245161CE7938200F1366A1cf9549c7e20',
+  address: '0x188E095Aab1f75E7F8c39480C45005854ef31fcB',
   abi: OneMONABI,
   chainId: monadMainnet.id,
 };

@@ -5,7 +5,7 @@ import Header from './Header';
 import SubNav from './SubNav';
 import '../css/1monAnalytics.css';
 
-const CONTRACT_ADDRESS = '0x26A56f3245161CE7938200F1366A1cf9549c7e20';
+const CONTRACT_ADDRESS = '0x188E095Aab1f75E7F8c39480C45005854ef31fcB';
 const ENTRY_FEE = 1;
 
 function MonAnalytics() {

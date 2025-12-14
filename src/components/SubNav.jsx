@@ -22,6 +22,20 @@ function SubNav() {
 
   return (
     <div className="sub-nav-container">
+      {/* Desktop Horizontal Tabs */}
+      <nav className="sub-nav-tabs">
+        {navItems.map((item) => (
+          <button
+            key={item.path}
+            className={`sub-nav-tab ${location.pathname === item.path ? 'active' : ''}`}
+            onClick={() => handleNavigation(item.path)}
+          >
+            {item.label}
+          </button>
+        ))}
+      </nav>
+
+      {/* Mobile Dropdown */}
       <button 
         className="sub-nav-dropdown-btn"
         onClick={() => setDropdownOpen(!dropdownOpen)}

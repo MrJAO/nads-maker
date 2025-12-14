@@ -37,6 +37,33 @@ function Header() {
         NadsMaker
       </div>
 
+      {/* Desktop Navigation */}
+      <nav className="desktop-nav">
+        <button className="nav-btn" onClick={() => handleNavigation('/1mon')}>
+          1 MON
+        </button>
+        <button className="nav-btn" onClick={() => handleNavigation('/nft-draw')}>
+          NFT Draw
+        </button>
+        <button className="nav-btn" onClick={() => handleNavigation('/profile')}>
+          Profile
+        </button>
+        <button className="nav-btn" onClick={() => handleNavigation('/docs')}>
+          Documentation
+        </button>
+        {isAdmin && (
+          <button className="nav-btn admin-btn" onClick={() => handleNavigation('/admin')}>
+            Admin
+          </button>
+        )}
+      </nav>
+
+      {/* Desktop Wallet Button */}
+      <button className="desktop-wallet-btn" onClick={handleWalletClick}>
+        {isConnected ? shortenAddress(address) : 'Connect Wallet'}
+      </button>
+
+      {/* Mobile Hamburger Button */}
       <button 
         className="hamburger-btn"
         onClick={() => setMenuOpen(!menuOpen)}
@@ -45,6 +72,7 @@ function Header() {
         <span className="hamburger-icon">☰</span>
       </button>
 
+      {/* Mobile Menu */}
       {menuOpen && (
         <>
           <div className="menu-overlay" onClick={() => setMenuOpen(false)}></div>

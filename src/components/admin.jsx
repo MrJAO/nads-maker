@@ -11,7 +11,7 @@ import '../css/admin.css';
 // CONTRACT CONFIGURATION
 // ============================================
 const CONTRACT_CONFIG = {
-  address: '0x26A56f3245161CE7938200F1366A1cf9549c7e20',
+  address: '0x188E095Aab1f75E7F8c39480C45005854ef31fcB',
   abi: OneMONABI,
   chainId: monadMainnet.id,
 };
@@ -42,6 +42,7 @@ function Admin() {
   const [isLoading, setIsLoading] = useState(false);
   const [txStatus, setTxStatus] = useState('');
   const [finalizingRaffleId, setFinalizingRaffleId] = useState(null);
+  const [cancellingRaffleId, setCancellingRaffleId] = useState(null);
   const [completingRaffleId, setCompletingRaffleId] = useState(null);
 
   // Treasury states
@@ -80,6 +81,7 @@ function Admin() {
       setTransferAmount('');
       setIsLoading(false);
       setFinalizingRaffleId(null);
+      setCancellingRaffleId(null);
       setCompletingRaffleId(null);
       setIsTransferring(false);
       refetchActiveRaffles();
@@ -131,6 +133,25 @@ function Admin() {
       console.error('Finalize failed:', error);
       setTxStatus('error');
       setFinalizingRaffleId(null);
+    }
+  };
+
+  const handleEmergencyCancel = async (raffleId) => {
+    setCancellingRaffleId(raffleId);
+    setTxStatus('');
+
+    try {
+      await writeContract({
+        address: CONTRACT_CONFIG.address,
+        abi: CONTRACT_CONFIG.abi,
+        functionName: 'emergencyCancelRaffle',
+        args: [raffleId],
+        chainId: monadMainnet.id,
+      });
+    } catch (error) {
+      console.error('Emergency cancel failed:', error);
+      setTxStatus('error');
+      setCancellingRaffleId(null);
     }
   };
 
@@ -302,6 +323,7 @@ function Admin() {
       const state = raffleInfo[9];
       const isActiveOrCreated = state === 0 || state === 1;
       const isPastEndTime = currentTime > endTime;
+      const hasParticipants = participantCount > 0;
 
       if (!isActiveOrCreated) return null;
 
@@ -319,13 +341,24 @@ function Admin() {
             <p>End: {new Date(endTime * 1000).toLocaleString()}</p>
           </div>
           {isPastEndTime && (
-            <button
-              className="finalize-btn"
-              onClick={() => handleFinalizeRaffle(raffleId)}
-              disabled={finalizingRaffleId === raffleId || isConfirming}
-            >
-              {finalizingRaffleId === raffleId ? 'Finalizing...' : 'Finalize Raffle'}
-            </button>
+            <div className="raffle-card-actions">
+              <button
+                className="finalize-btn"
+                onClick={() => handleFinalizeRaffle(raffleId)}
+                disabled={finalizingRaffleId === raffleId || cancellingRaffleId === raffleId || isConfirming}
+              >
+                {finalizingRaffleId === raffleId ? 'Finalizing...' : 'Finalize Raffle'}
+              </button>
+              {hasParticipants && (
+                <button
+                  className="cancel-btn"
+                  onClick={() => handleEmergencyCancel(raffleId)}
+                  disabled={finalizingRaffleId === raffleId || cancellingRaffleId === raffleId || isConfirming}
+                >
+                  {cancellingRaffleId === raffleId ? 'Cancelling...' : 'Cancel'}
+                </button>
+              )}
+            </div>
           )}
         </div>
       );
@@ -547,6 +580,20 @@ function Admin() {
 
       {/* Admin Sub Navigation */}
       <div className="admin-sub-nav-container">
+        {/* Desktop Horizontal Tabs */}
+        <nav className="admin-sub-nav-tabs">
+          {tabItems.map((item) => (
+            <button
+              key={item.value}
+              className={`admin-sub-nav-tab ${activeTab === item.value ? 'active' : ''}`}
+              onClick={() => handleTabChange(item.value)}
+            >
+              {item.label}
+            </button>
+          ))}
+        </nav>
+
+        {/* Mobile Dropdown */}
         <button 
           className="admin-sub-nav-dropdown-btn"
           onClick={() => setDropdownOpen(!dropdownOpen)}
