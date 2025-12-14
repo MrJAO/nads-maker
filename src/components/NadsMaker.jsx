@@ -252,6 +252,36 @@ function NadsMaker() {
         <p className="faq-question">5. Winning Participant</p>
         <p className="faq-answer">A participant will be selected using Pyth Network's verifiable randomness (VRF), ensuring a fair and tamper-proof selection process.</p>
       </div>
+
+      <div className="faq-item">
+        <p className="faq-question">6. Raffle Finalization</p>
+        <p className="faq-answer">
+          The Admin/Organizer will finalize an ended raffle within 24 hours.
+        </p>
+      </div>
+
+      <div className="faq-item">
+        <p className="faq-question">7. Admin Functions: Finalize & Cancel</p>
+      </div>
+
+      <div className="faq-item">
+        <p className="faq-question">a. Finalize (Manual)</p>
+        <p className="faq-answer">
+          To ensure proper execution, the Admin/Organizer will verify the status of the
+          Pyth VRF before confirming and finalizing the raffle. Finalization is not
+          automated and requires manual execution.
+        </p>
+      </div>
+
+      <div className="faq-item">
+        <p className="faq-question">b. Cancel (Manual)</p>
+        <p className="faq-answer">
+          In case of an emergency (e.g., Pyth VRF timeout or excessively high VRF fees),
+          and if the raffle cannot be finalized after 24 hours, the Admin/Organizer may
+          cancel the ended raffle. This action enables all participants to claim a
+          refund for that raffle.
+        </p>
+      </div>
     </div>
   );
 

@@ -9,7 +9,8 @@ function SubNav() {
 
   const navItems = [
     { label: 'Live', path: '/1mon' },
-    { label: 'Previous Activities', path: '/prev-raffle' },
+    { label: 'NFT Draw', path: '/nft-draw' },
+    { label: 'Previous Raffles', path: '/prev-raffle' },
     { label: 'Analytics', path: '/1mon-analytics' }
   ];
 

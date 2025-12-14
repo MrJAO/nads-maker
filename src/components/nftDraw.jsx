@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Header from './Header';
+import SubNav from './SubNav';
 import '../css/nftDraw.css';
 import skrumpey from '../assets/skrumpey_1153_pfp.png';
 
@@ -29,6 +30,7 @@ function NFTDraw() {
   return (
     <div className="nads-container">
       <Header />
+      <SubNav />
       
       <main className="nads-main">
         <div className="nft-draw-wrapper">

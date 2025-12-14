@@ -34,53 +34,6 @@ function Profile() {
     functionName: 'getActiveRaffleIds',
   });
 
-  // Get next raffle ID to determine current raffle
-  const { data: nextRaffleId } = useReadContract({
-    address: CONTRACT_CONFIG.address,
-    abi: CONTRACT_CONFIG.abi,
-    functionName: 'nextRaffleId',
-  });
-
-  // Check user participation in raffles 5-13 for NFT Draw eligibility
-  const nftDrawRaffleIds = [5, 6, 7, 8, 9, 10, 11, 12, 13];
-  const { data: participationData } = useReadContracts({
-    contracts: nftDrawRaffleIds.map(id => ({
-      address: CONTRACT_CONFIG.address,
-      abi: CONTRACT_CONFIG.abi,
-      functionName: 'isParticipant',
-      args: [id, address],
-    })),
-    enabled: !!address,
-  });
-
-  // Calculate NFT Draw eligibility
-  const getNFTDrawEligibility = () => {
-    if (!nextRaffleId || !participationData) {
-      return { status: 'Not Yet', color: '#888' };
-    }
-
-    const currentRaffleId = Number(nextRaffleId) - 1;
-    const participationCount = participationData.filter(p => p.result === true).length;
-
-    // If past raffle #13
-    if (currentRaffleId > 13) {
-      if (participationCount >= 8) {
-        return { status: 'Eligible', color: '#4ade80' };
-      } else {
-        return { status: 'Not Eligible', color: '#ef4444' };
-      }
-    }
-
-    // Still within raffle 5-13 range
-    if (participationCount >= 8) {
-      return { status: 'Eligible', color: '#4ade80' };
-    } else {
-      return { status: 'Not Yet', color: '#888' };
-    }
-  };
-
-  const nftDrawEligibility = getNFTDrawEligibility();
-
   // Switch to Monad when user connects
   useEffect(() => {
     if (isConnected) {
@@ -248,48 +201,6 @@ function Profile() {
             <div className="profile-address-section">
               <h2 className="profile-address-label">Your Wallet</h2>
               <p className="profile-address">{address}</p>
-            </div>
-
-            <div className="eligibility-sections">
-              <div className="eligibility-card">
-                <h3 className="eligibility-title">NFT Draw</h3>
-                <div className="eligibility-info">
-                  <div className="eligibility-row">
-                    <span className="eligibility-label">Draw Eligibility:</span>
-                    <span className="eligibility-status" style={{ color: nftDrawEligibility.color }}>
-                      {nftDrawEligibility.status}
-                    </span>
-                  </div>
-                  <div className="eligibility-row">
-                    <span className="eligibility-label">Start Date:</span>
-                    <span className="eligibility-value">TBA</span>
-                  </div>
-                  <div className="eligibility-row">
-                    <span className="eligibility-label">End Date:</span>
-                    <span className="eligibility-value">TBA</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="eligibility-card">
-                <h3 className="eligibility-title">Nads Raffle</h3>
-                <div className="eligibility-info">
-                  <div className="eligibility-row">
-                    <span className="eligibility-label">Draw Eligibility:</span>
-                    <span className="eligibility-status" style={{ color: '#888' }}>
-                      Coming Soon
-                    </span>
-                  </div>
-                  <div className="eligibility-row">
-                    <span className="eligibility-label">Start Date:</span>
-                    <span className="eligibility-value">TBA</span>
-                  </div>
-                  <div className="eligibility-row">
-                    <span className="eligibility-label">End Date:</span>
-                    <span className="eligibility-value">TBA</span>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {txStatus === 'success' && (

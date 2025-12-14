@@ -199,7 +199,7 @@ function Admin() {
   // ============================================
   const CreateEventTab = () => (
     <div className="admin-panel">
-      <h1 className="admin-title">Create Event</h1>
+      <h1 className="admin-title">Create 1 MON Raffle</h1>
       <p className="section-subtitle">1 MON and A Dream Raffle</p>
       
       <form className="admin-form" onSubmit={handleCreateRaffle}>

@@ -163,7 +163,8 @@ function Docs() {
             <p>Refunds are enabled only if:</p>
             <ul>
               <li>A raffle fails to meet its minimum participation threshold, or</li>
-              <li>A raffle is cancelled due to VRF timeout (1 day without randomness response)</li>
+              <li>A raffle is cancelled due to VRF timeout (1 day without randomness response), or</li>
+              <li>An ended raffle (threshold met) cannot be finalized after 24 hours due to emergencies (VRF timeout, excessively high VRF fees, or other technical issues)</li>
             </ul>
             <p>Refunds are limited to the original 1 MON participation fee. No additional compensation is provided.</p>
 
@@ -173,6 +174,7 @@ function Docs() {
               <li>Regularly withdraw excess MON after completed rounds to reduce on-chain exposure.</li>
               <li>Transfer required reward amounts into the contract before each new raffle.</li>
               <li>Cancel raffles stuck in "PendingVRF" state after 1 day and enable refunds.</li>
+              <li>Cancel ended raffles (threshold met) that cannot be finalized after 24 hours due to emergencies and enable refunds.</li>
             </ul>
             <p>All emergency actions are executed transparently via predefined smart contract functions and recorded immutably on-chain.</p>
 
@@ -321,9 +323,10 @@ function Docs() {
               <li>Unclaimed rewards after 3 days may be transferred to treasury</li>
             </ul>
 
-            <h3>5. Refunds (Threshold Not Met)</h3>
+            <h3>5. Refunds (Threshold Not Met or Emergency Cancellation)</h3>
             <ul>
               <li>If threshold is not met, refunds are enabled</li>
+              <li>If raffle cannot be finalized after 24 hours due to emergencies (VRF timeout, high fees), admin can cancel and enable refunds</li>
               <li>Participants can claim their 1 MON back within <strong>3 days</strong></li>
               <li>Visit the <strong>Profile</strong> tab and click "Claim Refund"</li>
               <li>Unclaimed refunds after 3 days may be transferred to treasury</li>
@@ -360,7 +363,7 @@ function Docs() {
                 </tr>
                 <tr>
                   <td>Cancelled</td>
-                  <td>Raffle cancelled (VRF timeout), refunds available</td>
+                  <td>Raffle cancelled (VRF timeout or emergency), refunds available</td>
                 </tr>
                 <tr>
                   <td>Completed</td>
@@ -375,6 +378,7 @@ function Docs() {
               <li><strong>Participation Amount:</strong> Exactly 1 MON (no more, no less)</li>
               <li><strong>One Entry Per Wallet:</strong> You cannot join the same raffle twice</li>
               <li><strong>Pull-Based System:</strong> You must manually claim your funds</li>
+              <li><strong>Emergency Cancellations:</strong> If a raffle cannot be finalized after 24 hours, admin may cancel it and enable refunds</li>
               <li><strong>Track Your Status:</strong> Check the Profile tab to see your participation history and claimable rewards/refunds</li>
             </ul>
 
@@ -402,13 +406,13 @@ function Docs() {
               <li>Participate in at least <strong>TBA</strong> (successful or unsuccessful) in the "1 MON and A Dream" system</li>
               <li>Both winning and non-winning raffle participations count toward eligibility</li>
               <li>Refunded raffles also count as participation</li>
-              <li>Track your progress in the <strong>Profile</strong> tab</li>
+              <li>Track your progress in the <strong>NFT Draw</strong> tab</li>
             </ul>
 
             <h3>2. Participation Tracking</h3>
             <ul>
               <li>Your participation count is automatically tracked on-chain via smart contract logs</li>
-              <li>Visit the <strong>Profile</strong> tab to view your current participation count</li>
+              <li>Visit the <strong>NFT Draw</strong> tab to view your current participation count</li>
               <li>The frontend reads your participation data directly from the blockchain</li>
               <li>All calculations are transparent and verifiable</li>
             </ul>
@@ -587,6 +591,10 @@ function Docs() {
                 <tr>
                   <td><code>cancelStuckRaffle()</code></td>
                   <td>Cancels a raffle stuck in PendingVRF state after 1-day timeout</td>
+                </tr>
+                <tr>
+                  <td><code>cancelEndedRaffle()</code></td>
+                  <td>Cancels ended raffles (threshold met) that cannot be finalized after 24 hours due to emergencies (VRF timeout, high VRF fees); enables refunds</td>
                 </tr>
                 <tr>
                   <td><code>markRaffleCompleted()</code></td>

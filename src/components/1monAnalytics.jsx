@@ -212,7 +212,7 @@ function MonAnalytics() {
       <SubNav />
       
       <main className="nads-main analytics-main">
-        <p style={{ textAlign: 'center', color: '#888', marginBottom: '2rem' }}>Past 24 Raffle Data</p>
+        <p style={{ textAlign: 'center', color: '#888', marginBottom: '2rem' }}>Past 24 Raffles Data</p>
 
         <div className="analytics-cards">
           <div className="analytics-card">
