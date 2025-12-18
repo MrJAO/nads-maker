@@ -1,10 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useSwitchChain, useReadContract } from 'wagmi';
 import { parseEther, formatEther } from 'viem';
 import { ADMIN_ADDRESS, monadMainnet } from '../walletIntegration/config';
 import OneMONABI from '../abi/OneMON.json';
+import TreasureHuntABI from '../abi/TreasureHunt.json';
 import Header from '../components/Header';
+import CreateRaffleTab from '../admin/CreateRaffleTab';
+import CreateTHuntTab from '../admin/CreateTHuntTab';
+import FinalizeCleanupTab from '../admin/FinalizeCleanupTab';
+import TreasuryTab from '../admin/TreasuryTab';
 import '../css/admin.css';
 
 // ============================================
@@ -13,6 +18,12 @@ import '../css/admin.css';
 const CONTRACT_CONFIG = {
   address: '0x188E095Aab1f75E7F8c39480C45005854ef31fcB',
   abi: OneMONABI,
+  chainId: monadMainnet.id,
+};
+
+const THUNT_CONTRACT_CONFIG = {
+  address: '0x078D72CcE5500d5C28410aeBf9B78bbD910C31ae',
+  abi: TreasureHuntABI,
   chainId: monadMainnet.id,
 };
 
@@ -30,11 +41,14 @@ function Admin() {
   
   const isAdmin = isConnected && address?.toLowerCase() === ADMIN_ADDRESS.toLowerCase();
 
+  // Track which action triggered the transaction
+  const lastActionRef = useRef(null);
+
   // Tab state
   const [activeTab, setActiveTab] = useState('create');
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  // Form states
+  // Raffle form states
   const [rewards, setRewards] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -45,9 +59,19 @@ function Admin() {
   const [cancellingRaffleId, setCancellingRaffleId] = useState(null);
   const [completingRaffleId, setCompletingRaffleId] = useState(null);
 
-  // Treasury states
-  const [transferAmount, setTransferAmount] = useState('');
-  const [isTransferring, setIsTransferring] = useState(false);
+  // THunt form states
+  const [gridWidth, setGridWidth] = useState('');
+  const [gridHeight, setGridHeight] = useState('');
+  const [rewardPerTreasure, setRewardPerTreasure] = useState('');
+  const [treasureCount, setTreasureCount] = useState('');
+  const [thuntStartDate, setThuntStartDate] = useState('');
+  const [thuntEndDate, setThuntEndDate] = useState('');
+  const [raffleIdStart, setRaffleIdStart] = useState('');
+  const [raffleIdEnd, setRaffleIdEnd] = useState('');
+  const [isCreatingTHunt, setIsCreatingTHunt] = useState(false);
+  const [endingTHuntId, setEndingTHuntId] = useState(null);
+  const [completingTHuntId, setCompletingTHuntId] = useState(null);
+  const [cancellingTHuntId, setCancellingTHuntId] = useState(null);
 
   // Get active raffle IDs
   const { data: activeRaffleIds, refetch: refetchActiveRaffles } = useReadContract({
@@ -56,10 +80,24 @@ function Admin() {
     functionName: 'getActiveRaffleIds',
   });
 
-  // Get withdrawable amount
+  // Get withdrawable amount (Raffle)
   const { data: withdrawableAmount, refetch: refetchWithdrawable } = useReadContract({
     address: CONTRACT_CONFIG.address,
     abi: CONTRACT_CONFIG.abi,
+    functionName: 'getWithdrawableAmount',
+  });
+
+  // Get active THunt IDs
+  const { data: activeTHuntIds, refetch: refetchActiveTHunts } = useReadContract({
+    address: THUNT_CONTRACT_CONFIG.address,
+    abi: THUNT_CONTRACT_CONFIG.abi,
+    functionName: 'getActiveTHuntIds',
+  });
+
+  // Get withdrawable amount (THunt)
+  const { data: thuntWithdrawableAmount, refetch: refetchTHuntWithdrawable } = useReadContract({
+    address: THUNT_CONTRACT_CONFIG.address,
+    abi: THUNT_CONTRACT_CONFIG.abi,
     functionName: 'getWithdrawableAmount',
   });
 
@@ -74,20 +112,64 @@ function Admin() {
   useEffect(() => {
     if (isSuccess) {
       setTxStatus('success');
-      setRewards('');
-      setStartDate('');
-      setEndDate('');
-      setThreshold('');
-      setTransferAmount('');
-      setIsLoading(false);
-      setFinalizingRaffleId(null);
-      setCancellingRaffleId(null);
-      setCompletingRaffleId(null);
-      setIsTransferring(false);
+      
+      // Reset states based on which action was performed
+      switch (lastActionRef.current) {
+        case 'createRaffle':
+          setRewards('');
+          setStartDate('');
+          setEndDate('');
+          setThreshold('');
+          setIsLoading(false);
+          break;
+        case 'createTHunt':
+          setGridWidth('');
+          setGridHeight('');
+          setRewardPerTreasure('');
+          setTreasureCount('');
+          setThuntStartDate('');
+          setThuntEndDate('');
+          setRaffleIdStart('');
+          setRaffleIdEnd('');
+          setIsCreatingTHunt(false);
+          break;
+        case 'finalizeRaffle':
+          setFinalizingRaffleId(null);
+          break;
+        case 'cancelRaffle':
+          setCancellingRaffleId(null);
+          break;
+        case 'completeRaffle':
+          setCompletingRaffleId(null);
+          break;
+        case 'endTHunt':
+          setEndingTHuntId(null);
+          break;
+        case 'completeTHunt':
+          setCompletingTHuntId(null);
+          break;
+        case 'cancelTHunt':
+          setCancellingTHuntId(null);
+          break;
+        default:
+          // Reset all loading states as fallback
+          setIsLoading(false);
+          setIsCreatingTHunt(false);
+          setFinalizingRaffleId(null);
+          setCancellingRaffleId(null);
+          setCompletingRaffleId(null);
+          setEndingTHuntId(null);
+          setCompletingTHuntId(null);
+          setCancellingTHuntId(null);
+      }
+      
+      lastActionRef.current = null;
       refetchActiveRaffles();
       refetchWithdrawable();
+      refetchActiveTHunts();
+      refetchTHuntWithdrawable();
     }
-  }, [isSuccess, refetchActiveRaffles, refetchWithdrawable]);
+  }, [isSuccess, refetchActiveRaffles, refetchWithdrawable, refetchActiveTHunts, refetchTHuntWithdrawable]);
 
   // ============================================
   // CONTRACT INTERACTIONS
@@ -96,6 +178,7 @@ function Admin() {
     e.preventDefault();
     setIsLoading(true);
     setTxStatus('');
+    lastActionRef.current = 'createRaffle';
 
     try {
       await writeContract({
@@ -114,12 +197,45 @@ function Admin() {
       console.error('Transaction failed:', error);
       setTxStatus('error');
       setIsLoading(false);
+      lastActionRef.current = null;
+    }
+  };
+
+  const handleCreateTHunt = async (e) => {
+    e.preventDefault();
+    setIsCreatingTHunt(true);
+    setTxStatus('');
+    lastActionRef.current = 'createTHunt';
+
+    try {
+      await writeContract({
+        address: THUNT_CONTRACT_CONFIG.address,
+        abi: THUNT_CONTRACT_CONFIG.abi,
+        functionName: 'createTreasureHunt',
+        args: [
+          BigInt(gridWidth),
+          BigInt(gridHeight),
+          parseEther(rewardPerTreasure),
+          BigInt(treasureCount),
+          toUnixTimestamp(thuntStartDate),
+          toUnixTimestamp(thuntEndDate),
+          BigInt(raffleIdStart),
+          BigInt(raffleIdEnd),
+        ],
+        chainId: monadMainnet.id,
+      });
+    } catch (error) {
+      console.error('Transaction failed:', error);
+      setTxStatus('error');
+      setIsCreatingTHunt(false);
+      lastActionRef.current = null;
     }
   };
 
   const handleFinalizeRaffle = async (raffleId) => {
     setFinalizingRaffleId(raffleId);
     setTxStatus('');
+    lastActionRef.current = 'finalizeRaffle';
 
     try {
       await writeContract({
@@ -133,12 +249,14 @@ function Admin() {
       console.error('Finalize failed:', error);
       setTxStatus('error');
       setFinalizingRaffleId(null);
+      lastActionRef.current = null;
     }
   };
 
   const handleEmergencyCancel = async (raffleId) => {
     setCancellingRaffleId(raffleId);
     setTxStatus('');
+    lastActionRef.current = 'cancelRaffle';
 
     try {
       await writeContract({
@@ -152,12 +270,14 @@ function Admin() {
       console.error('Emergency cancel failed:', error);
       setTxStatus('error');
       setCancellingRaffleId(null);
+      lastActionRef.current = null;
     }
   };
 
   const handleMarkCompleted = async (raffleId) => {
     setCompletingRaffleId(raffleId);
     setTxStatus('');
+    lastActionRef.current = 'completeRaffle';
 
     try {
       await writeContract({
@@ -171,110 +291,110 @@ function Admin() {
       console.error('Mark completed failed:', error);
       setTxStatus('error');
       setCompletingRaffleId(null);
+      lastActionRef.current = null;
     }
   };
 
-  const handleTreasuryTransfer = async (e) => {
-    e.preventDefault();
-    setIsTransferring(true);
+  const handleEndTHunt = async (tHuntId) => {
+    setEndingTHuntId(tHuntId);
     setTxStatus('');
+    lastActionRef.current = 'endTHunt';
 
+    try {
+      await writeContract({
+        address: THUNT_CONTRACT_CONFIG.address,
+        abi: THUNT_CONTRACT_CONFIG.abi,
+        functionName: 'endTreasureHunt',
+        args: [tHuntId],
+        chainId: monadMainnet.id,
+      });
+    } catch (error) {
+      console.error('End THunt failed:', error);
+      setTxStatus('error');
+      setEndingTHuntId(null);
+      lastActionRef.current = null;
+    }
+  };
+
+  const handleMarkTHuntCompleted = async (tHuntId) => {
+    setCompletingTHuntId(tHuntId);
+    setTxStatus('');
+    lastActionRef.current = 'completeTHunt';
+
+    try {
+      await writeContract({
+        address: THUNT_CONTRACT_CONFIG.address,
+        abi: THUNT_CONTRACT_CONFIG.abi,
+        functionName: 'markCompleted',
+        args: [tHuntId],
+        chainId: monadMainnet.id,
+      });
+    } catch (error) {
+      console.error('Mark THunt completed failed:', error);
+      setTxStatus('error');
+      setCompletingTHuntId(null);
+      lastActionRef.current = null;
+    }
+  };
+
+  const handleForceCancelTHunt = async (tHuntId) => {
+    setCancellingTHuntId(tHuntId);
+    setTxStatus('');
+    lastActionRef.current = 'cancelTHunt';
+
+    try {
+      await writeContract({
+        address: THUNT_CONTRACT_CONFIG.address,
+        abi: THUNT_CONTRACT_CONFIG.abi,
+        functionName: 'forceCancel',
+        args: [tHuntId],
+        chainId: monadMainnet.id,
+      });
+    } catch (error) {
+      console.error('Force cancel THunt failed:', error);
+      setTxStatus('error');
+      setCancellingTHuntId(null);
+      lastActionRef.current = null;
+    }
+  };
+
+  const handleRaffleTreasuryTransfer = async (amount) => {
+    lastActionRef.current = 'treasuryTransfer';
     try {
       await writeContract({
         address: CONTRACT_CONFIG.address,
         abi: CONTRACT_CONFIG.abi,
         functionName: 'treasuryTransfer',
-        args: [parseEther(transferAmount)],
+        args: [parseEther(amount)],
         chainId: monadMainnet.id,
       });
     } catch (error) {
-      console.error('Transfer failed:', error);
-      setTxStatus('error');
-      setIsTransferring(false);
+      console.error('Raffle transfer failed:', error);
+      lastActionRef.current = null;
+      throw error;
+    }
+  };
+
+  const handleTHuntTreasuryTransfer = async (amount) => {
+    lastActionRef.current = 'treasuryTransfer';
+    try {
+      await writeContract({
+        address: THUNT_CONTRACT_CONFIG.address,
+        abi: THUNT_CONTRACT_CONFIG.abi,
+        functionName: 'treasuryTransfer',
+        args: [parseEther(amount)],
+        chainId: monadMainnet.id,
+      });
+    } catch (error) {
+      console.error('THunt transfer failed:', error);
+      lastActionRef.current = null;
+      throw error;
     }
   };
 
   // ============================================
   // TAB CONTENT COMPONENTS
   // ============================================
-  const CreateEventTab = () => (
-    <div className="admin-panel">
-      <h1 className="admin-title">Create 1 MON Raffle</h1>
-      <p className="section-subtitle">1 MON and A Dream Raffle</p>
-      
-      <form className="admin-form" onSubmit={handleCreateRaffle}>
-        <div className="form-group">
-          <label>Rewards (MON)</label>
-          <input 
-            type="number" 
-            step="0.01"
-            min="0"
-            className="form-input"
-            placeholder="e.g. 100"
-            value={rewards}
-            onChange={(e) => setRewards(e.target.value)}
-            disabled={isLoading}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Start Date</label>
-          <input 
-            type="datetime-local" 
-            className="form-input"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            disabled={isLoading}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label>End Date</label>
-          <input 
-            type="datetime-local" 
-            className="form-input"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            disabled={isLoading}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Threshold (Participants)</label>
-          <input 
-            type="number" 
-            step="1"
-            min="1"
-            className="form-input"
-            placeholder="e.g. 50"
-            value={threshold}
-            onChange={(e) => setThreshold(e.target.value)}
-            disabled={isLoading}
-            required
-          />
-        </div>
-
-        {txStatus === 'success' && (
-          <p className="tx-status success">Transaction successful!</p>
-        )}
-        {txStatus === 'error' && (
-          <p className="tx-status error">Transaction failed. Please try again.</p>
-        )}
-
-        <button 
-          type="submit" 
-          className="submit-btn"
-          disabled={isLoading || isConfirming}
-        >
-          {isLoading || isConfirming ? 'Creating...' : 'Create Raffle'}
-        </button>
-      </form>
-    </div>
-  );
-
   const NFTDrawTab = () => (
     <div className="admin-panel">
       <h1 className="admin-title">NFT Draw</h1>
@@ -289,235 +409,12 @@ function Admin() {
     </div>
   );
 
-  const FinalizeCleanupTab = () => {
-    const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000));
-    
-    useEffect(() => {
-      const timer = setInterval(() => {
-        setCurrentTime(Math.floor(Date.now() / 1000));
-      }, 1000);
-      return () => clearInterval(timer);
-    }, []);
-
-    const formatCountdown = (seconds) => {
-      if (seconds <= 0) return 'Available now';
-      const days = Math.floor(seconds / 86400);
-      const hours = Math.floor((seconds % 86400) / 3600);
-      const minutes = Math.floor((seconds % 3600) / 60);
-      const secs = seconds % 60;
-      return `${days}d ${hours}h ${minutes}m ${secs}s`;
-    };
-
-    const ActiveRaffleCard = ({ raffleId }) => {
-      const { data: raffleInfo } = useReadContract({
-        address: CONTRACT_CONFIG.address,
-        abi: CONTRACT_CONFIG.abi,
-        functionName: 'getRaffleInfo',
-        args: [raffleId],
-      });
-
-      if (!raffleInfo) return null;
-
-      const endTime = Number(raffleInfo[1]);
-      const participantCount = Number(raffleInfo[4]);
-      const state = raffleInfo[9];
-      const isActiveOrCreated = state === 0 || state === 1;
-      const isPastEndTime = currentTime > endTime;
-      const hasParticipants = participantCount > 0;
-
-      if (!isActiveOrCreated) return null;
-
-      return (
-        <div className="active-raffle-card">
-          <div className="raffle-card-header">
-            <span className="raffle-id">Raffle #{raffleId.toString()}</span>
-            <span className={`raffle-state ${isPastEndTime ? 'expired' : 'active'}`}>
-              {isPastEndTime ? 'Ended' : 'Active'}
-            </span>
-          </div>
-          <div className="raffle-card-body">
-            <p>Participants: {participantCount}</p>
-            <p>Threshold: {raffleInfo[2].toString()}</p>
-            <p>End: {new Date(endTime * 1000).toLocaleString()}</p>
-          </div>
-          {isPastEndTime && (
-            <div className="raffle-card-actions">
-              <button
-                className="finalize-btn"
-                onClick={() => handleFinalizeRaffle(raffleId)}
-                disabled={finalizingRaffleId === raffleId || cancellingRaffleId === raffleId || isConfirming}
-              >
-                {finalizingRaffleId === raffleId ? 'Finalizing...' : 'Finalize Raffle'}
-              </button>
-              {hasParticipants && (
-                <button
-                  className="cancel-btn"
-                  onClick={() => handleEmergencyCancel(raffleId)}
-                  disabled={finalizingRaffleId === raffleId || cancellingRaffleId === raffleId || isConfirming}
-                >
-                  {cancellingRaffleId === raffleId ? 'Cancelling...' : 'Cancel'}
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-      );
-    };
-
-    const EndedRaffleCard = ({ raffleId }) => {
-      const { data: raffleInfo } = useReadContract({
-        address: CONTRACT_CONFIG.address,
-        abi: CONTRACT_CONFIG.abi,
-        functionName: 'getRaffleInfo',
-        args: [raffleId],
-      });
-
-      if (!raffleInfo) return null;
-
-      const state = raffleInfo[9];
-      const claimDeadline = Number(raffleInfo[7]);
-      const participantCount = Number(raffleInfo[4]);
-      const isEndedState = state === 3 || state === 4 || state === 6;
-
-      if (!isEndedState) return null;
-
-      const canMarkCompleted = currentTime > claimDeadline;
-      const timeUntilMarkable = claimDeadline - currentTime;
-
-      const getStateLabel = () => {
-        if (state === 3) return 'Winner Selected';
-        if (state === 4) return 'Refunds Enabled';
-        if (state === 6) return 'Cancelled';
-        return 'Unknown';
-      };
-
-      return (
-        <div className="active-raffle-card">
-          <div className="raffle-card-header">
-            <span className="raffle-id">Raffle #{raffleId.toString()}</span>
-            <span className="raffle-state expired">{getStateLabel()}</span>
-          </div>
-          <div className="raffle-card-body">
-            <p>Participants: {participantCount}</p>
-            <p>Threshold: {raffleInfo[2].toString()}</p>
-            <p>Claim Deadline: {new Date(claimDeadline * 1000).toLocaleString()}</p>
-          </div>
-          <button
-            className="finalize-btn"
-            onClick={() => handleMarkCompleted(raffleId)}
-            disabled={!canMarkCompleted || completingRaffleId === raffleId || isConfirming}
-          >
-            {completingRaffleId === raffleId ? 'Marking...' : 'Mark Completed'}
-          </button>
-          {!canMarkCompleted && (
-            <p className="countdown-timer">{formatCountdown(timeUntilMarkable)}</p>
-          )}
-        </div>
-      );
-    };
-
-    const activeRaffles = activeRaffleIds || [];
-    const hasActiveRaffles = activeRaffles.length > 0;
-
-    return (
-      <div className="admin-panel">
-        <h1 className="admin-title">Finalize / Cleanup</h1>
-
-        <div className="cleanup-section">
-          <h2 className="section-title">Active Raffles</h2>
-          {hasActiveRaffles ? (
-            <div className="raffles-list">
-              {activeRaffles.map((raffleId) => (
-                <ActiveRaffleCard key={raffleId.toString()} raffleId={raffleId} />
-              ))}
-            </div>
-          ) : (
-            <p className="no-raffles">No active raffles</p>
-          )}
-        </div>
-
-        <div className="cleanup-section">
-          <h2 className="section-title">Ended / Cleanup</h2>
-          {hasActiveRaffles ? (
-            <div className="raffles-list">
-              {activeRaffles.map((raffleId) => (
-                <EndedRaffleCard key={raffleId.toString()} raffleId={raffleId} />
-              ))}
-            </div>
-          ) : (
-            <p className="no-raffles">No raffles pending cleanup</p>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  const TreasuryTab = () => {
-    const liveRaffleId = activeRaffleIds && activeRaffleIds.length > 0 ? activeRaffleIds[0] : null;
-
-    return (
-      <div className="admin-panel">
-        <h1 className="admin-title">Treasury Transfer</h1>
-
-        <div className="treasury-info">
-          {liveRaffleId && (
-            <div className="treasury-row">
-              <span className="treasury-label">Live Raffle</span>
-              <span className="treasury-value live">
-                Yes (Raffle #{liveRaffleId.toString()})
-              </span>
-            </div>
-          )}
-
-          <div className="treasury-row highlight">
-            <span className="treasury-label">Withdrawable Amount</span>
-            <span className="treasury-value highlight">
-              {withdrawableAmount ? formatEther(withdrawableAmount) : '0'} MON
-            </span>
-          </div>
-        </div>
-
-        <form className="treasury-form" onSubmit={handleTreasuryTransfer}>
-          <div className="form-group">
-            <label>Transfer Amount (MON)</label>
-            <input 
-              type="number" 
-              step="0.01"
-              min="0"
-              max={withdrawableAmount ? formatEther(withdrawableAmount) : '0'}
-              className="form-input"
-              placeholder="e.g. 50"
-              value={transferAmount}
-              onChange={(e) => setTransferAmount(e.target.value)}
-              disabled={isTransferring || isConfirming}
-              required
-            />
-          </div>
-
-          {txStatus === 'success' && (
-            <p className="tx-status success">Transfer successful!</p>
-          )}
-          {txStatus === 'error' && (
-            <p className="tx-status error">Transfer failed. Please try again.</p>
-          )}
-
-          <button 
-            type="submit" 
-            className="submit-btn treasury-btn"
-            disabled={isTransferring || isConfirming || !withdrawableAmount || withdrawableAmount === 0n}
-          >
-            {isTransferring || isConfirming ? 'Transferring...' : 'Transfer to Treasury'}
-          </button>
-        </form>
-      </div>
-    );
-  };
-
   // ============================================
   // ADMIN SUB NAVIGATION
   // ============================================
   const tabItems = [
     { label: 'Create Event', value: 'create' },
+    { label: 'Treasure Hunt', value: 'thunt' },
     { label: 'NFT Draw', value: 'nftdraw' },
     { label: 'Nads Raffle', value: 'nadsraffle' },
     { label: 'Finalize/Cleanup', value: 'finalize' },
@@ -535,17 +432,92 @@ function Admin() {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'create':
-        return <CreateEventTab />;
+        return <CreateRaffleTab 
+          rewards={rewards}
+          setRewards={setRewards}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          threshold={threshold}
+          setThreshold={setThreshold}
+          isLoading={isLoading}
+          txStatus={txStatus}
+          isConfirming={isConfirming}
+          handleCreateRaffle={handleCreateRaffle}
+        />;
+      case 'thunt':
+        return <CreateTHuntTab 
+          gridWidth={gridWidth}
+          setGridWidth={setGridWidth}
+          gridHeight={gridHeight}
+          setGridHeight={setGridHeight}
+          rewardPerTreasure={rewardPerTreasure}
+          setRewardPerTreasure={setRewardPerTreasure}
+          treasureCount={treasureCount}
+          setTreasureCount={setTreasureCount}
+          thuntStartDate={thuntStartDate}
+          setThuntStartDate={setThuntStartDate}
+          thuntEndDate={thuntEndDate}
+          setThuntEndDate={setThuntEndDate}
+          raffleIdStart={raffleIdStart}
+          setRaffleIdStart={setRaffleIdStart}
+          raffleIdEnd={raffleIdEnd}
+          setRaffleIdEnd={setRaffleIdEnd}
+          isCreatingTHunt={isCreatingTHunt}
+          txStatus={txStatus}
+          isConfirming={isConfirming}
+          handleCreateTHunt={handleCreateTHunt}
+        />;
       case 'nftdraw':
         return <NFTDrawTab />;
       case 'nadsraffle':
         return <NadsRaffleTab />;
       case 'finalize':
-        return <FinalizeCleanupTab />;
+        return <FinalizeCleanupTab 
+          CONTRACT_CONFIG={CONTRACT_CONFIG}
+          THUNT_CONTRACT_CONFIG={THUNT_CONTRACT_CONFIG}
+          activeRaffleIds={activeRaffleIds}
+          activeTHuntIds={activeTHuntIds}
+          finalizingRaffleId={finalizingRaffleId}
+          cancellingRaffleId={cancellingRaffleId}
+          completingRaffleId={completingRaffleId}
+          endingTHuntId={endingTHuntId}
+          completingTHuntId={completingTHuntId}
+          cancellingTHuntId={cancellingTHuntId}
+          isConfirming={isConfirming}
+          handleFinalizeRaffle={handleFinalizeRaffle}
+          handleEmergencyCancel={handleEmergencyCancel}
+          handleMarkCompleted={handleMarkCompleted}
+          handleEndTHunt={handleEndTHunt}
+          handleMarkTHuntCompleted={handleMarkTHuntCompleted}
+          handleForceCancelTHunt={handleForceCancelTHunt}
+        />;
       case 'treasury':
-        return <TreasuryTab />;
+        return <TreasuryTab 
+          activeRaffleIds={activeRaffleIds}
+          withdrawableAmount={withdrawableAmount}
+          activeTHuntIds={activeTHuntIds}
+          thuntWithdrawableAmount={thuntWithdrawableAmount}
+          isConfirming={isConfirming}
+          handleRaffleTreasuryTransfer={handleRaffleTreasuryTransfer}
+          handleTHuntTreasuryTransfer={handleTHuntTreasuryTransfer}
+        />;
       default:
-        return <CreateEventTab />;
+        return <CreateRaffleTab 
+          rewards={rewards}
+          setRewards={setRewards}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          threshold={threshold}
+          setThreshold={setThreshold}
+          isLoading={isLoading}
+          txStatus={txStatus}
+          isConfirming={isConfirming}
+          handleCreateRaffle={handleCreateRaffle}
+        />;
     }
   };
 

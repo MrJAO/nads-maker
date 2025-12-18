@@ -12,6 +12,7 @@ import PrevRaffle from './components/prevRaffle.jsx'
 import MonAnalytics from './components/1monAnalytics.jsx'
 import Profile from './components/profile.jsx'
 import WalletProvider from './walletIntegration/WalletProvider.jsx'
+import TreasureHunt from './components/treasureHunt.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -26,6 +27,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/prev-raffle" element={<PrevRaffle />} />
           <Route path="/1mon-analytics" element={<MonAnalytics />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/treasure-hunt" element={<TreasureHunt />} />
         </Routes>
       </BrowserRouter>
     </WalletProvider>

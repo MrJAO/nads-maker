@@ -222,6 +222,15 @@
   text-shadow: 2px 2px 0px #000;
 }
 
+.section-subtitle {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 9px;
+  color: #888;
+  text-align: center;
+  margin-top: -20px;
+  margin-bottom: 25px;
+}
+
 .admin-form {
   display: flex;
   flex-direction: column;
@@ -258,6 +267,47 @@
 
 .form-input::placeholder {
   color: #666;
+}
+
+/* Form Row (side-by-side inputs) */
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.form-group.half {
+  flex: 1;
+}
+
+/* Grid Preview */
+.grid-preview {
+  background: rgba(59, 130, 246, 0.1);
+  border: 2px solid #3b82f6;
+  border-radius: 4px;
+  padding: 12px 15px;
+  text-align: center;
+}
+
+.grid-preview span {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 9px;
+  color: #3b82f6;
+}
+
+/* Summary Preview */
+.summary-preview {
+  background: rgba(251, 191, 36, 0.1);
+  border: 2px solid #fbbf24;
+  border-radius: 4px;
+  padding: 12px 15px;
+  text-align: center;
+}
+
+.summary-preview p {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 9px;
+  color: #fbbf24;
+  margin: 0;
 }
 
 .radio-group {
@@ -301,13 +351,13 @@
   margin-top: 10px;
 }
 
-.submit-btn:hover {
+.submit-btn:hover:not(:disabled) {
   background: #ff0000;
   box-shadow: 5px 5px 0px #555;
   transform: translate(-1px, -1px);
 }
 
-.submit-btn:active {
+.submit-btn:active:not(:disabled) {
   box-shadow: 2px 2px 0px #555;
   transform: translate(2px, 2px);
 }
@@ -618,8 +668,28 @@
     font-size: 14px;
   }
 
+  .section-subtitle {
+    font-size: 8px;
+    margin-bottom: 20px;
+  }
+
   .radio-group {
     flex-direction: column;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .grid-preview,
+  .summary-preview {
+    padding: 10px 12px;
+  }
+
+  .grid-preview span,
+  .summary-preview p {
+    font-size: 8px;
   }
   
   .section-title {
@@ -695,5 +765,27 @@
   .admin-sub-nav-item {
     font-size: 6px;
     padding: 8px 12px;
+  }
+
+  .admin-title {
+    font-size: 12px;
+  }
+
+  .section-subtitle {
+    font-size: 7px;
+  }
+
+  .form-group label {
+    font-size: 8px;
+  }
+
+  .grid-preview span,
+  .summary-preview p {
+    font-size: 7px;
+  }
+
+  .submit-btn {
+    font-size: 10px;
+    padding: 12px 15px;
   }
 }

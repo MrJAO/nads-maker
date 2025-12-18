@@ -7,12 +7,13 @@ function SubNav() {
   const location = useLocation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const navItems = [
-    { label: 'Live', path: '/1mon' },
-    { label: 'NFT Draw', path: '/nft-draw' },
-    { label: 'Previous Raffles', path: '/prev-raffle' },
-    { label: 'Analytics', path: '/1mon-analytics' }
-  ];
+const navItems = [
+     { label: 'Live', path: '/1mon' },
+     { label: 'Treasure Hunt', path: '/treasure-hunt' },
+     { label: 'NFT Draw', path: '/nft-draw' },
+     { label: 'Previous Raffles', path: '/prev-raffle' },
+     { label: 'Analytics', path: '/1mon-analytics' }
+   ];
 
   const currentItem = navItems.find(item => item.path === location.pathname) || navItems[0];
 

@@ -77,9 +77,6 @@ function Header() {
             <button className="menu-item" onClick={() => handleNavigation('/1mon')}>
               1 MON
             </button>
-            <button className="menu-item" onClick={() => handleNavigation('/nft-draw')}>
-              NFT Draw
-            </button>
             <button className="menu-item" onClick={() => handleNavigation('/profile')}>
               Profile
             </button>
