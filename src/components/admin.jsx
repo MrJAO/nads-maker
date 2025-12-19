@@ -22,7 +22,7 @@ const CONTRACT_CONFIG = {
 };
 
 const THUNT_CONTRACT_CONFIG = {
-  address: '0x078D72CcE5500d5C28410aeBf9B78bbD910C31ae',
+  address: '0x91AC7FEfB3759C36355F92eF3F3014f9aF648Bb7',
   abi: TreasureHuntABI,
   chainId: monadMainnet.id,
 };

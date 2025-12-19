@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useReadContract } from 'wagmi';
+import { formatEther } from 'viem';
 
 function FinalizeCleanupTab({ 
   CONTRACT_CONFIG,
@@ -37,6 +38,10 @@ function FinalizeCleanupTab({
     const secs = seconds % 60;
     return `${days}d ${hours}h ${minutes}m ${secs}s`;
   };
+
+  // ============================================
+  // RAFFLE CARDS
+  // ============================================
 
   const ActiveRaffleCard = ({ raffleId }) => {
     const { data: raffleInfo } = useReadContract({
@@ -146,6 +151,10 @@ function FinalizeCleanupTab({
     );
   };
 
+  // ============================================
+  // TREASURE HUNT CARDS
+  // ============================================
+
   const ActiveTHuntCard = ({ tHuntId }) => {
     const { data: huntInfo } = useReadContract({
       address: THUNT_CONTRACT_CONFIG.address,
@@ -156,26 +165,54 @@ function FinalizeCleanupTab({
 
     if (!huntInfo) return null;
 
-    const endTime = Number(huntInfo[4]);
-    const treasureCount = Number(huntInfo[2]);
-    const treasuresFound = Number(huntInfo[7]);
-    const state = huntInfo[9];
+    // Updated index mapping for new contract
+    const parsedHuntInfo = {
+      gridWidth: Number(huntInfo[0]),
+      gridHeight: Number(huntInfo[1]),
+      rewardPerTreasure: huntInfo[2],
+      treasureCount: Number(huntInfo[3]),
+      startTime: Number(huntInfo[4]),
+      endTime: Number(huntInfo[5]),
+      raffleIdStart: Number(huntInfo[6]),
+      raffleIdEnd: Number(huntInfo[7]),
+      treasuresFound: Number(huntInfo[8]),
+      treasuresClaimed: Number(huntInfo[9]),
+      claimDeadline: Number(huntInfo[10]),
+      state: Number(huntInfo[11]),
+    };
+
+    const { gridWidth, gridHeight, treasureCount, treasuresFound, endTime, state, rewardPerTreasure } = parsedHuntInfo;
+    const totalSquares = gridWidth * gridHeight;
     const isActiveOrCreated = state === 0 || state === 1;
     const isPastEndTime = currentTime > endTime;
 
     if (!isActiveOrCreated) return null;
 
+    const getStateLabel = () => {
+      if (state === 0) return 'Pending VRF';
+      if (state === 1 && !isPastEndTime) return 'Active';
+      if (state === 1 && isPastEndTime) return 'Ready to End';
+      return 'Unknown';
+    };
+
+    const getStateClass = () => {
+      if (state === 0) return 'pending';
+      if (isPastEndTime) return 'expired';
+      return 'active';
+    };
+
     return (
       <div className="active-raffle-card">
         <div className="raffle-card-header">
           <span className="raffle-id">Hunt #{tHuntId.toString()}</span>
-          <span className={`raffle-state ${isPastEndTime ? 'expired' : 'active'}`}>
-            {state === 0 ? 'Created' : isPastEndTime ? 'Ended' : 'Active'}
+          <span className={`raffle-state ${getStateClass()}`}>
+            {getStateLabel()}
           </span>
         </div>
         <div className="raffle-card-body">
-          <p>Treasures: {treasuresFound}/{treasureCount}</p>
-          <p>Grid Size: {huntInfo[0].toString()}</p>
+          <p>Grid: {gridWidth} × {gridHeight} ({totalSquares} squares)</p>
+          <p>Treasures: {treasuresFound} / {treasureCount}</p>
+          <p>Reward: {formatEther(rewardPerTreasure)} MON each</p>
           <p>End: {new Date(endTime * 1000).toLocaleString()}</p>
         </div>
         {isPastEndTime && state === 1 && (
@@ -198,43 +235,63 @@ function FinalizeCleanupTab({
             >
               {cancellingTHuntId === tHuntId ? 'Cancelling...' : 'Force Cancel (VRF Timeout)'}
             </button>
+            <p className="countdown-timer">VRF timeout: 24 hours after creation</p>
           </div>
         )}
       </div>
     );
   };
 
-const EndedTHuntCard = ({ tHuntId }) => {
-    
-  const { data: huntInfo } = useReadContract({
-    address: THUNT_CONTRACT_CONFIG.address,
-    abi: THUNT_CONTRACT_CONFIG.abi,
-    functionName: 'getTHuntInfo',
-    args: [tHuntId],
-  });
+  const EndedTHuntCard = ({ tHuntId }) => {
+    const { data: huntInfo } = useReadContract({
+      address: THUNT_CONTRACT_CONFIG.address,
+      abi: THUNT_CONTRACT_CONFIG.abi,
+      functionName: 'getTHuntInfo',
+      args: [tHuntId],
+    });
 
-  if (!huntInfo) return null;
+    if (!huntInfo) return null;
 
-    const state = huntInfo[9];
-    const claimDeadline = Number(huntInfo[8]);
-    const treasureCount = Number(huntInfo[2]);
-    const treasuresFound = Number(huntInfo[7]);
+    // Updated index mapping for new contract
+    const parsedHuntInfo = {
+      gridWidth: Number(huntInfo[0]),
+      gridHeight: Number(huntInfo[1]),
+      rewardPerTreasure: huntInfo[2],
+      treasureCount: Number(huntInfo[3]),
+      startTime: Number(huntInfo[4]),
+      endTime: Number(huntInfo[5]),
+      raffleIdStart: Number(huntInfo[6]),
+      raffleIdEnd: Number(huntInfo[7]),
+      treasuresFound: Number(huntInfo[8]),
+      treasuresClaimed: Number(huntInfo[9]),
+      claimDeadline: Number(huntInfo[10]),
+      state: Number(huntInfo[11]),
+    };
+
+    const { gridWidth, gridHeight, treasureCount, treasuresFound, treasuresClaimed, claimDeadline, state, rewardPerTreasure } = parsedHuntInfo;
+    const totalSquares = gridWidth * gridHeight;
     const isEndedState = state === 2;
 
     if (!isEndedState) return null;
 
     const canMarkCompleted = currentTime > claimDeadline;
     const timeUntilMarkable = claimDeadline - currentTime;
+    const unclaimedTreasures = treasuresFound - treasuresClaimed;
 
     return (
       <div className="active-raffle-card">
         <div className="raffle-card-header">
           <span className="raffle-id">Hunt #{tHuntId.toString()}</span>
-          <span className="raffle-state expired">Ended</span>
+          <span className="raffle-state expired">Reveal Phase</span>
         </div>
         <div className="raffle-card-body">
-          <p>Treasures Found: {treasuresFound}/{treasureCount}</p>
-          <p>Grid Size: {huntInfo[0].toString()}</p>
+          <p>Grid: {gridWidth} × {gridHeight} ({totalSquares} squares)</p>
+          <p>Treasures Found: {treasuresFound} / {treasureCount}</p>
+          <p>Treasures Claimed: {treasuresClaimed} / {treasuresFound}</p>
+          {unclaimedTreasures > 0 && (
+            <p className="unclaimed-warning">⚠️ {unclaimedTreasures} unclaimed treasure(s)</p>
+          )}
+          <p>Reward: {formatEther(rewardPerTreasure)} MON each</p>
           <p>Claim Deadline: {new Date(claimDeadline * 1000).toLocaleString()}</p>
         </div>
         <button
@@ -250,6 +307,10 @@ const EndedTHuntCard = ({ tHuntId }) => {
       </div>
     );
   };
+
+  // ============================================
+  // RENDER
+  // ============================================
 
   const activeRaffles = activeRaffleIds || [];
   const activeTHunts = activeTHuntIds || [];

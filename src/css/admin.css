@@ -639,6 +639,44 @@
   cursor: not-allowed;
 }
 
+/* Pending State */
+.raffle-state.pending {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid #fbbf24;
+}
+
+/* Unclaimed Warning */
+.unclaimed-warning {
+  color: #f59e0b;
+  font-weight: bold;
+}
+
+/* Cleanup Section */
+.cleanup-section {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #333;
+}
+
+.cleanup-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* Treasury Section */
+.treasury-section {
+  margin-top: 1.5rem;
+}
+
+/* Raffles List */
+.raffles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .admin-sub-nav-dropdown-btn {
